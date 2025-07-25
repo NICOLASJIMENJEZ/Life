@@ -7,7 +7,7 @@ ini_set('display_errors', 1);
 
 // Config DB
 $host = 'switchyard.proxy.rlwy.net';
-$db = 'Life_Gym';
+$db = 'life_gym';
 $user = 'root';
 $pass = 'yHVACjdVpisuiHXnOqKCEfWbkJuktloQ';
 
