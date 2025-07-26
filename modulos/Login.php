@@ -10,6 +10,8 @@ $host = 'switchyard.proxy.rlwy.net';
 $db = 'life_gym';
 $user = 'root';
 $pass = 'yHVACjdVpisuiHXnOqKCEfWbkJuktloQ';
+ header("Location: ../index.php");
+    exit();
 
 $conexion = new mysqli($host, $user, $pass, $db);
 
