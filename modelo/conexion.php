@@ -1,15 +1,13 @@
 <?php
-// Parámetros de conexión
-$servername = "localhost"; // Nombre del servidor
-$username = "root"; // Usuario de la base de datos
-$password = "903135Nicolas"; // Contraseña del usuario
-$dbname = "Life_Gym"; // Nombre de la base de datos
+$host = 'switchyard.proxy.rlwy.net';
+$port = 15384;
+$user = 'root';
+$pass = 'yHVACjdVpisuiHXnOqKCEfWbkJuktloQ';
+$db = 'life_gym'; // o 'railway' si usaste esa
 
-// Crear la conexión
-$conexion = new mysqli($servername, $username, $password, $dbname);
+$conn = new mysqli($host, $user, $pass, $db, $port);
 
-// Verificar si hay error en la conexión
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
+if ($conn->connect_error) {
+    die("Error de conexión: " . $conn->connect_error);
 }
-?>
+?> 
