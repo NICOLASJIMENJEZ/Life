@@ -1,7 +1,5 @@
-# Imagen base con PHP 8.1 y Apache
 FROM php:8.1-apache
 
-# ✅ Instalar dependencias necesarias del sistema
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -11,30 +9,28 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     curl \
+    libcurl4-openssl-dev \
+    pkg-config \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd
 
-# ✅ Instalar extensiones PHP necesarias
 RUN docker-php-ext-install mysqli pdo pdo_mysql mbstring zip curl
 
-# ✅ Activar módulos de Apache necesarios (por ejemplo, rewrite)
 RUN a2enmod rewrite
 
-# ✅ Copiar el proyecto al contenedor
 COPY . /var/www/html/
 
-# Cambiar permisos
-RUN chown -R www-data:www-data /var/www/html
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
 
-# ✅ Definir login.php como entrada principal
 RUN echo "DirectoryIndex login.php" > /etc/apache2/conf-available/override.conf \
     && a2enconf override
 
-# ✅ Permitir .htaccess (opcional pero recomendado)
-RUN sed -i '/<VirtualHost \*:80>/a \\t<Directory "/var/www/html">\\n\\t\\tAllowOverride All\\n\\t</Directory>' /etc/apache2/sites-available/000-default.conf
+# 🔧 Corrección segura para evitar errores de sintaxis
+RUN echo '<Directory "/var/www/html">
+    Options Indexes FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>' >> /etc/apache2/apache2.conf
 
-# ✅ Evitar advertencias de ServerName
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-
-# ✅ Debug: Ver archivos copiados
-RUN ls -al /var/www/html

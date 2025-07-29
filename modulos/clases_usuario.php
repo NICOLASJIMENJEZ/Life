@@ -1,7 +1,7 @@
 <?php
-$host = "localhost";
+$host = "switchyard.proxy.rlwy.net";
 $user = "root";
-$pass = "903135Nicolas";
+$pass = "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ";
 $db = "life_gym";
 
 $conn = new mysqli($host, $user, $pass, $db);

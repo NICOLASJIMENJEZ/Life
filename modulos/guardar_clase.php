@@ -1,6 +1,6 @@
 <?php
 // Conexión a la base de datos
-$conexion = new mysqli("localhost", "root", "903135Nicolas", "life_gym");
+$conexion = new mysqli("switchyard.proxy.rlwy.net", "root", "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ", "life_gym");
 if ($conexion->connect_error) {
     die("Error de conexión: " . $conexion->connect_error);
 }
