@@ -10,7 +10,7 @@ services:
     name: smart-gym-db
     env: docker
     plan: free
-    dockerfilePath: ./mysql.Dockerfile
+    dockerfilePath: ./mysql.dockerfile
     disk:
       name: mysql-disk
       mountPath: /var/lib/mysql
