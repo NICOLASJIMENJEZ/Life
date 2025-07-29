@@ -32,6 +32,7 @@ if ($conexion->connect_error) {
 <h2 class="mb-4">Clientes con Reportes Registrados</h2>
 
 <div class="row">
+   <a href="dashboard.php" class="btn btn-secondary">Volver</a>
   <?php
   $sql = "SELECT DISTINCT nombre FROM reportes ORDER BY nombre ASC";
   $resultado = $conexion->query($sql);

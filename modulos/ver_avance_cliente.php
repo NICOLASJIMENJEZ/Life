@@ -159,7 +159,7 @@ if ($resultado && $resultado->num_rows > 0) {
   </div>
 <?php endif; ?>
 
-<a href="index.html" class="btn btn-secondary mt-3">Volver al Inicio</a>
+<a href="index.php" class="btn btn-secondary mt-3">Volver al Inicio</a>
 <a href="ver_avance_cliente.php" class="btn btn-secondary mt-3">Volver a Reportes</a>
 
 </body>

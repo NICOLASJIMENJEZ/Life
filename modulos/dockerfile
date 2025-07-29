@@ -1,14 +1,20 @@
-# Usa una imagen oficial de PHP con Apache
 FROM php:8.1-apache
 
-# Copia todos los archivos al directorio del servidor web en el contenedor
+# Copiar TODO el proyecto, incluyendo login.php que está en la raíz
 COPY . /var/www/html/
 
-# Habilita el módulo de reescritura (opcional, útil para URLs amigables)
-RUN a2enmod rewrite
-
-# Establece permisos (opcional pero recomendado)
+# Cambiar permisos para evitar errores de acceso
 RUN chown -R www-data:www-data /var/www/html
 
-# Expón el puerto 80
-EXPOSE 80
+# Establecer login.php como la página principal
+RUN echo "DirectoryIndex login.php" > /etc/apache2/conf-available/override.conf \
+    && a2enconf override
+
+# Habilitar AllowOverride en Apache (por si usas .htaccess)
+RUN sed -i '/<VirtualHost \*:80>/a \\t<Directory "/var/www/html">\\n\\t\\tAllowOverride All\\n\\t</Directory>' /etc/apache2/sites-available/000-default.conf
+
+# Opcional pero recomendado: evitar advertencia de ServerName
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# ✅ Agrega un paso de DEBUG para verificar que login.php está donde debe
+RUN ls -al /var/www/html
