@@ -1,20 +1,40 @@
+# Imagen base con PHP 8.1 y Apache
 FROM php:8.1-apache
 
-# Copiar TODO el proyecto, incluyendo login.php que está en la raíz
+# ✅ Instalar dependencias necesarias del sistema
+RUN apt-get update && apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libonig-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    curl \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd
+
+# ✅ Instalar extensiones PHP necesarias
+RUN docker-php-ext-install mysqli pdo pdo_mysql mbstring zip curl
+
+# ✅ Activar módulos de Apache necesarios (por ejemplo, rewrite)
+RUN a2enmod rewrite
+
+# ✅ Copiar el proyecto al contenedor
 COPY . /var/www/html/
 
-# Cambiar permisos para evitar errores de acceso
+# Cambiar permisos
 RUN chown -R www-data:www-data /var/www/html
 
-# Establecer login.php como la página principal
+# ✅ Definir login.php como entrada principal
 RUN echo "DirectoryIndex login.php" > /etc/apache2/conf-available/override.conf \
     && a2enconf override
 
-# Habilitar AllowOverride en Apache (por si usas .htaccess)
+# ✅ Permitir .htaccess (opcional pero recomendado)
 RUN sed -i '/<VirtualHost \*:80>/a \\t<Directory "/var/www/html">\\n\\t\\tAllowOverride All\\n\\t</Directory>' /etc/apache2/sites-available/000-default.conf
 
-# Opcional pero recomendado: evitar advertencia de ServerName
+# ✅ Evitar advertencias de ServerName
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
-# ✅ Agrega un paso de DEBUG para verificar que login.php está donde debe
+# ✅ Debug: Ver archivos copiados
 RUN ls -al /var/www/html

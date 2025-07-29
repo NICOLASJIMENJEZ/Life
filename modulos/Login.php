@@ -6,10 +6,10 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Config DB
-$host = 'localhost';
-$db = 'Life_Gym';
+$host = 'switchyard.proxy.rlwy.net';
+$db = 'life_gym';
 $user = 'root';
-$pass = '903135Nicolas';
+$pass = 'yHVACjdVpisuiHXnOqKCEfWbkJuktloQ';
 
 $conexion = new mysqli($host, $user, $pass, $db);
 
