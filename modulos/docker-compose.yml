@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: smart-gym-app
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true
+
+  - type: pserv
+    name: smart-gym-db
+    env: docker
+    plan: free
+    dockerfilePath: ./mysql.Dockerfile
+    disk:
+      name: mysql-disk
+      mountPath: /var/lib/mysql
+      sizeGB: 1
