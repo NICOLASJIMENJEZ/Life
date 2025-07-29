@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Config DB
-$host = 'smart-gym-app'; // nombre del servicio en render.yaml
+$host = 'smart-gym-db'; // nombre del servicio en render.yaml
 $user = 'root';
 $pass = '123456';
 $db   = 'life_gym'; 
