@@ -6,10 +6,10 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Config DB
-$host = 'smart-gym-db';
+$host = 'smart-gym-app'; // nombre del servicio en render.yaml
 $user = 'root';
 $pass = '123456';
-$db   = 'life_gym';
+$db   = 'life_gym'; 
 
 $conexion = new mysqli($host, $user, $pass, $db);
 
