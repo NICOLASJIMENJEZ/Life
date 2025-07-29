@@ -6,10 +6,10 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Config DB
-$host = 'localhost';
-$db = 'Life_Gym';
+$host = 'switchyard.proxy.rlwy.net';
+$db = 'life_gym';
 $user = 'root';
-$pass = '903135Nicolas';
+$pass = 'yHVACjdVpisuiHXnOqKCEfWbkJuktloQ';
 
 $conexion = new mysqli($host, $user, $pass, $db);
 
@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Life Gym</title>
-    <link rel="stylesheet" href="estilo.css">
+    <link rel="stylesheet" href="modulos/estilo.css">
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
