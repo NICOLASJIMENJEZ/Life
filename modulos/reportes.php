@@ -1,7 +1,14 @@
 <?php
-$conexion = new mysqli("switchyard.proxy.rlwy.net", "root", "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ", "life_gym");
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
+// Conexión con PDO
+try {
+    $conexion = new PDO(
+        "mysql:host=switchyard.proxy.rlwy.net;dbname=life_gym;charset=utf8mb4",
+        "root",
+        "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ",
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
+} catch (PDOException $e) {
+    die("❌ Error de conexión: " . $e->getMessage());
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -15,18 +22,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $triceps = $_POST['carga_triceps'];
     $hombro = $_POST['carga_hombro'];
 
-    $sql = "INSERT INTO reportes (nombre, peso, estatura, edad, carga_pecho, carga_sentadilla, carga_biceps, carga_triceps, carga_hombro)
-            VALUES ('$nombre', '$peso', '$estatura', '$edad', '$pecho', '$sentadilla', '$biceps', '$triceps', '$hombro')";
+    try {
+        $stmt = $conexion->prepare("INSERT INTO reportes 
+            (nombre, peso, estatura, edad, carga_pecho, carga_sentadilla, carga_biceps, carga_triceps, carga_hombro)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-    if ($conexion->query($sql) === TRUE) {
+        $stmt->execute([
+            $nombre, $peso, $estatura, $edad,
+            $pecho, $sentadilla, $biceps, $triceps, $hombro
+        ]);
+
         echo "<script>alert('Reporte guardado con éxito'); window.location.href='reportes.php';</script>";
-    } else {
-        echo "Error: " . $conexion->error;
+    } catch (PDOException $e) {
+        echo "❌ Error al guardar el reporte: " . $e->getMessage();
     }
-
-    $conexion->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
