@@ -1,13 +1,18 @@
 <?php
-$host = 'xxxx.onrender.com';
-$user = 'root';
-$pass = '123456';
-$db = 'life_gym';
+// Configuración para PostgreSQL
+$host     = 'dpg-d24l0l15pdvs73bvvmq0-a';
+$port     = '5432';
+$dbname   = 'life_gym_db';
+$user     = 'life_gym_db_user';
+$password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
 
-$conn = new mysqli($host, $user, $pass, $db);
-
-if ($conn->connect_error) {
-    die("💥 Error de conexión: " . $conn->connect_error);
+try {
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+    $conexion = new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+    // echo "✅ Conexión exitosa a PostgreSQL";
+} catch (PDOException $e) {
+    die("❌ Error de conexión: " . $e->getMessage());
 }
-echo "✅ Conexión exitosa a la base de datos.";
 ?>
