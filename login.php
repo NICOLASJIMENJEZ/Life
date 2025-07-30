@@ -6,15 +6,20 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Config DB
-$host = 'dpg-d24l0l15pdvs73bvvmq0-a'; // nombre del servicio en render.yaml
-$user = 'life_gym_db_user';
-$pass = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
-$db   = 'life_gym '; 
+$host     = 'dpg-d24l0l15pdvs73bvvmq0-a';
+$port     = '5432';
+$dbname   = 'life_gym_db';
+$user     = 'life_gym_db_user';
+$password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
 
-$conexion = new mysqli($host, $user, $pass, $db);
-
-if ($conexion->connect_error) {
-    die('Error en la conexión a la base de datos: ' . $conexion->connect_error);
+try {
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;";
+    $conexion = new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+    echo "✅ Conexión exitosa a PostgreSQL en Render.";
+} catch (PDOException $e) {
+    echo "❌ Error de conexión: " . $e->getMessage();
 }
 
 $error_message = "";
