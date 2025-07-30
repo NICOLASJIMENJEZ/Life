@@ -1,9 +1,25 @@
 <?php
-$conexion = new mysqli("switchyard.proxy.rlwy.net", "root", "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ", "life_gym");
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
+$host = 'switchyard.proxy.rlwy.net';
+$dbname = 'life_gym';
+$user = 'root';
+$password = 'yHVACjdVpisuiHXnOqKCEfWbkJuktloQ';
+$port = 3306; // Puerto MySQL
+
+try {
+    $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
+    $conexion = new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+    // echo "✅ Conexión exitosa con PDO.";
+} catch (PDOException $e) {
+    die("❌ Error de conexión: " . $e->getMessage());
 }
 ?>
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
