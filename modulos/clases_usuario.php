@@ -1,21 +1,28 @@
 <?php
 $host = "switchyard.proxy.rlwy.net";
+$port = "5432";  // Puerto típico de PostgreSQL
+$db = "life_gym";
 $user = "root";
 $pass = "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ";
-$db = "life_gym";
 
-$conn = new mysqli($host, $user, $pass, $db);
-if ($conn->connect_error) {
-    die("❌ Error de conexión: " . $conn->connect_error);
+try {
+    $dsn = "pgsql:host=$host;port=$port;dbname=$db";
+    $conn = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+} catch (PDOException $e) {
+    die("❌ Error de conexión: " . $e->getMessage());
 }
 
 $sql = "SELECT * FROM clases ORDER BY fecha_creacion DESC";
-$resultado = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $torso = [];
 $inferior = [];
 
-while ($fila = $resultado->fetch_assoc()) {
+foreach ($resultado as $fila) {
     $grupo = isset($fila['grupo']) ? strtolower($fila['grupo']) : 'otro';
     if ($grupo === 'torso') {
         $torso[] = $fila;
@@ -24,6 +31,7 @@ while ($fila = $resultado->fetch_assoc()) {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
