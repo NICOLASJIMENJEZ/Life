@@ -17,7 +17,7 @@ try {
     $conexion = new PDO($dsn, $user, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
-    // echo "✅ Conexión exitosa a PostgreSQL en Render.";
+    // echo "✅ Conexión exitosa";
 } catch (PDOException $e) {
     die("❌ Error de conexión: " . $e->getMessage());
 }
