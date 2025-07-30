@@ -19,8 +19,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
-    $sql = "INSERT INTO usuarios (nombre, apellido, telefono, fechaNacimiento, identificacion, email, password, rol_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+// Después (con PDO, correcto con PostgreSQL)
+$stmt = $conexion->prepare("INSERT INTO usuarios (...) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+$stmt->execute([$nombre, $apellido, $telefono, $fechaNacimiento, $identificacion, $email, $passwordHash, $fechaRegistro, $rol_id]);
+
 
     if ($stmt = $conexion->prepare($sql)) {
         $stmt->bind_param("sssssssi", $nombre, $apellido, $telefono, $fechaNacimiento, $identificacion, $email, $password, $rol_id);
