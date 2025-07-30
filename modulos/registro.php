@@ -1,5 +1,5 @@
 <?php
-include '../modelo/conexion.php'; // Ya está usando PDO aquí
+include '../modelo/conexion.php'; // Asegúrate de que define $conn como instancia de PDO
 
 $error = "";
 
@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             VALUES 
             (:nombre, :apellido, :telefono, :fechaNacimiento, :identificacion, :email, :password, :fechaRegistro, :rol_id)";
 
-        $stmt = $conexion->prepare($sql);
+        $stmt = $conn->prepare($sql); // <- cambio aquí: usamos $conn, no $conexion
 
         $stmt->bindParam(':nombre', $nombre);
         $stmt->bindParam(':apellido', $apellido);
