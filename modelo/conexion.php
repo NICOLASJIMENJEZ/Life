@@ -3,11 +3,15 @@ $host = 'dpg-d24l0l15pdvs73bvvmq0-a';
 $port = 5432;
 $user = 'life_gym_db_user';
 $pass = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
-$db = 'life_gym_db'; // o 'railway' si usaste esa
+$db   = 'life_gym_db';
 
-$conn = new mysqli($host, $user, $pass, $db, $port);
-
-if ($conn->connect_error) {
-    die("Error de conexión: " . $conn->connect_error);
+try {
+    $dsn = "pgsql:host=$host;port=$port;dbname=$db";
+    $conn = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+    // echo "✅ Conectado a PostgreSQL con éxito";
+} catch (PDOException $e) {
+    die("❌ Error de conexión: " . $e->getMessage());
 }
-?> 
+?>
