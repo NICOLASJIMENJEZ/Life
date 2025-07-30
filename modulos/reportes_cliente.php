@@ -1,7 +1,7 @@
 <?php
 try {
     $conexion = new PDO(
-        "mysql:host=switchyard.proxy.rlwy.net;dbname=life_gym;charset=utf8mb4",
+        "pgsql:host=switchyard.proxy.rlwy.net;port=5432;dbname=life_gym;charset=utf8",
         "root",
         "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ",
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
