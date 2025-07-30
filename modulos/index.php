@@ -42,7 +42,7 @@
             </ul>
           </li>
         </ul>
-       <a href="logout.php" class="btn btn-success">Cerrar Sesión</a>
+       <a href="modulos/logout.php" class="btn btn-success">Cerrar Sesión</a>
 
       </div>
     </div>
