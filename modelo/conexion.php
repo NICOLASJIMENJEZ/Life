@@ -1,9 +1,9 @@
 <?php
-$host = 'switchyard.proxy.rlwy.net';
-$port = 15384;
-$user = 'root';
-$pass = 'yHVACjdVpisuiHXnOqKCEfWbkJuktloQ';
-$db = 'life_gym'; // o 'railway' si usaste esa
+$host = 'dpg-d24l0l15pdvs73bvvmq0-a';
+$port = 5432;
+$user = 'life_gym_db_user';
+$pass = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
+$db = 'life_gym_db'; // o 'railway' si usaste esa
 
 $conn = new mysqli($host, $user, $pass, $db, $port);
 
