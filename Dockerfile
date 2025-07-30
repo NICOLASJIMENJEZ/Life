@@ -27,12 +27,11 @@ RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 RUN echo "DirectoryIndex login.php" > /etc/apache2/conf-available/override.conf \
     && a2enconf override
 
-RUN bash -c 'echo "<Directory /var/www/html>\n\
-Options Indexes FollowSymLinks\n\
-AllowOverride All\n\
-Require all granted\n\
-</Directory>" >> /etc/apache2/apache2.conf'
+RUN echo "<Directory /var/www/html>\n\
+    Options Indexes FollowSymLinks\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>" >> /etc/apache2/apache2.conf
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
-
 
