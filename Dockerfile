@@ -12,8 +12,9 @@ RUN apt-get update && apt-get install -y \
     libcurl4-openssl-dev \
     libonig-dev \
     pkg-config \
+    libpq-dev \  # ← NECESARIO para PostgreSQL
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql mbstring zip curl \
+    && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql pdo_pgsql mbstring zip curl \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -33,3 +34,4 @@ RUN echo '<Directory "/var/www/html">\n\
 </Directory>' >> /etc/apache2/apache2.conf
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
