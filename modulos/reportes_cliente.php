@@ -1,7 +1,13 @@
 <?php
-$conexion = new mysqli("switchyard.proxy.rlwy.net", "root", "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ", "life_gym");
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
+try {
+    $conexion = new PDO(
+        "mysql:host=switchyard.proxy.rlwy.net;dbname=life_gym;charset=utf8mb4",
+        "root",
+        "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ",
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
+} catch (PDOException $e) {
+    die("❌ Error de conexión: " . $e->getMessage());
 }
 ?>
 <!DOCTYPE html>
@@ -32,30 +38,36 @@ if ($conexion->connect_error) {
 <h2 class="mb-4">Clientes con Reportes Registrados</h2>
 
 <div class="row">
-   <a href="dashboard.php" class="btn btn-secondary">Volver</a>
+   <a href="dashboard.php" class="btn btn-secondary mb-4">Volver</a>
   <?php
-  $sql = "SELECT DISTINCT nombre FROM reportes ORDER BY nombre ASC";
-  $resultado = $conexion->query($sql);
+  try {
+      $stmt = $conexion->query("SELECT DISTINCT nombre FROM reportes ORDER BY nombre ASC");
+      $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-  if ($resultado->num_rows > 0) {
-      while ($fila = $resultado->fetch_assoc()) {
-          $nombre = urlencode($fila['nombre']);
-          echo "
-          <div class='col-md-4 mb-4'>
-            <a href='ver_reporte_clientes.php?nombre=$nombre' style='text-decoration:none;'>
-              <div class='card p-3 text-center'>
-                <img src='https://cdn-icons-png.flaticon.com/512/149/149071.png' alt='icono' width='60'>
-                <h4 class='mt-2'>{$fila['nombre']}</h4>
-              </div>
-            </a>
-          </div>";
+      if (count($clientes) > 0) {
+          foreach ($clientes as $fila) {
+              $nombre = urlencode($fila['nombre']);
+              echo "
+              <div class='col-md-4 mb-4'>
+                <a href='ver_reporte_clientes.php?nombre=$nombre' style='text-decoration:none;'>
+                  <div class='card p-3 text-center'>
+                    <img src='https://cdn-icons-png.flaticon.com/512/149/149071.png' alt='icono' width='60'>
+                    <h4 class='mt-2'>{$fila['nombre']}</h4>
+                  </div>
+                </a>
+              </div>";
+          }
+      } else {
+          echo "<p>No hay clientes con reportes aún.</p>";
       }
-  } else {
-      echo "<p>No hay clientes con reportes aún.</p>";
+  } catch (PDOException $e) {
+      echo "❌ Error al consultar los reportes: " . $e->getMessage();
   }
-  $conexion->close();
+
+  $conexion = null; // Cierra la conexión PDO
   ?>
 </div>
 
 </body>
 </html>
+
