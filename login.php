@@ -1,11 +1,11 @@
 <?php
-session_start(); // <-- Esto debe ir al principio (solo una vez)
+session_start(); // Debe ir al inicio
 
-// Mostrar errores para depuración
+// Mostrar errores para depuración (puedes quitarlo en producción)
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Config DB
+// Config DB (Render PostgreSQL)
 $host     = 'dpg-d24l0l15pdvs73bvvmq0-a';
 $port     = '5432';
 $dbname   = 'life_gym_db';
@@ -17,32 +17,26 @@ try {
     $conexion = new PDO($dsn, $user, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
-    echo "✅ Conexión exitosa a PostgreSQL en Render.";
+    // echo "✅ Conexión exitosa a PostgreSQL en Render.";
 } catch (PDOException $e) {
-    echo "❌ Error de conexión: " . $e->getMessage();
+    die("❌ Error de conexión: " . $e->getMessage());
 }
 
 $error_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-    $password = $_POST['password'];
+    $password_input = $_POST['password'];
 
-    $sql = "SELECT * FROM usuarios WHERE email = ?";
+    $sql = "SELECT * FROM usuarios WHERE email = :email";
     $stmt = $conexion->prepare($sql);
-
-    if (!$stmt) {
-        die('Error en la preparación de la consulta: ' . $conexion->error);
-    }
-
-    $stmt->bind_param("s", $email);
+    $stmt->bindParam(':email', $email);
     $stmt->execute();
-    $result = $stmt->get_result();
 
-    if ($result->num_rows > 0) {
-        $usuario = $result->fetch_assoc();
+    $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (password_verify($password, $usuario['password'])) {
+    if ($usuario) {
+        if (password_verify($password_input, $usuario['password'])) {
             $_SESSION['usuario_id'] = $usuario['id'];
             $_SESSION['usuario_email'] = $usuario['email'];
             $_SESSION['rol_id'] = $usuario['rol_id'];
@@ -54,16 +48,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             exit();
         } else {
-            $error_message = "Contraseña incorrecta para el correo: " . htmlspecialchars($email);
+            $error_message = "❌ Contraseña incorrecta.";
         }
     } else {
-        $error_message = "El correo no está registrado: " . htmlspecialchars($email);
+        $error_message = "❌ El correo no está registrado.";
     }
-
-    $stmt->close();
-    $conexion->close();
 }
 ?>
+
 
 
 
