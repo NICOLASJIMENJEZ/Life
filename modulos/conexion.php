@@ -1,5 +1,5 @@
 <?php
-// Configuración para PostgreSQL
+// Conexión usando PDO para PostgreSQL
 $host     = 'dpg-d24l0l15pdvs73bvvmq0-a';
 $port     = '5432';
 $dbname   = 'life_gym_db';
