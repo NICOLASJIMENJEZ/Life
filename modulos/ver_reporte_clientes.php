@@ -1,7 +1,16 @@
 <?php
-$conexion = new mysqli("switchyard.proxy.rlwy.net", "root", "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ", "life_gym");
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
+$host = "switchyard.proxy.rlwy.net";
+$port = "5432";
+$db = "life_gym";
+$user = "root";
+$pass = "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ";
+
+try {
+    $conexion = new PDO("pgsql:host=$host;port=$port;dbname=$db", $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+} catch (PDOException $e) {
+    die("Error de conexión: " . $e->getMessage());
 }
 
 $nombreCliente = isset($_GET['nombre']) ? urldecode($_GET['nombre']) : '';
@@ -9,7 +18,8 @@ $nombreCliente = isset($_GET['nombre']) ? urldecode($_GET['nombre']) : '';
 // Eliminar
 if (isset($_POST['eliminar_id'])) {
     $idEliminar = intval($_POST['eliminar_id']);
-    $conexion->query("DELETE FROM reportes WHERE id = $idEliminar");
+    $stmt = $conexion->prepare("DELETE FROM reportes WHERE id = :id");
+    $stmt->execute([':id' => $idEliminar]);
 }
 
 // Actualizar
@@ -24,17 +34,32 @@ if (isset($_POST['actualizar_id'])) {
     $triceps = $_POST['carga_triceps'];
     $hombro = $_POST['carga_hombro'];
 
-    $conexion->query("UPDATE reportes SET
-        peso='$peso', estatura='$estatura', edad='$edad',
-        carga_pecho='$pecho', carga_sentadilla='$sentadilla',
-        carga_biceps='$biceps', carga_triceps='$triceps', carga_hombro='$hombro'
-        WHERE id=$id");
+    $stmt = $conexion->prepare("
+        UPDATE reportes SET
+            peso = :peso, estatura = :estatura, edad = :edad,
+            carga_pecho = :pecho, carga_sentadilla = :sentadilla,
+            carga_biceps = :biceps, carga_triceps = :triceps, carga_hombro = :hombro
+        WHERE id = :id
+    ");
+    $stmt->execute([
+        ':peso' => $peso,
+        ':estatura' => $estatura,
+        ':edad' => $edad,
+        ':pecho' => $pecho,
+        ':sentadilla' => $sentadilla,
+        ':biceps' => $biceps,
+        ':triceps' => $triceps,
+        ':hombro' => $hombro,
+        ':id' => $id
+    ]);
 }
 
-// Volver a consultar después de eliminar o actualizar
-$sql = "SELECT * FROM reportes WHERE nombre = '$nombreCliente' ORDER BY fecha_reporte DESC";
-$resultado = $conexion->query($sql);
+// Consultar después de eliminar o actualizar
+$stmt = $conexion->prepare("SELECT * FROM reportes WHERE nombre = :nombre ORDER BY fecha_reporte DESC");
+$stmt->execute([':nombre' => $nombreCliente]);
+$resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
