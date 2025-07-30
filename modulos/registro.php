@@ -20,8 +20,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error = "❌ Debes seleccionar un rol.";
     } else {
         try {
+            // ✅ Corregido: fecha_nacimiento → fechaNacimiento
             $sql = "INSERT INTO usuarios 
-                (nombre, apellido, telefono, fecha_nacimiento, identificacion, email, password, fecha_registro, rol_id) 
+                (nombre, apellido, telefono, fechaNacimiento, identificacion, email, password, fecha_registro, rol_id) 
                 VALUES 
                 (:nombre, :apellido, :telefono, :fechaNacimiento, :identificacion, :email, :password, :fechaRegistro, :rol_id)";
 
@@ -49,6 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
