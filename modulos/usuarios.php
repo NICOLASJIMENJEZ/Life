@@ -1,9 +1,27 @@
 <?php
-$conexion = new mysqli("switchyard.proxy.rlwy.net", "root", "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ", "life_gym");
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
+$host = "dpg-d24l0l15pdvs73bvvmq0-a";
+$port = "5432";
+$dbname = "life_gym_db";
+$username = "life_gym_db_user";
+$password = "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p"; // Reemplaza por la contraseña real
+
+try {
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+    $conexion = new PDO($dsn, $username, $password);
+
+    // Modo de error para excepciones
+    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+    // Opcional: establecer el conjunto de caracteres
+    $conexion->exec("SET NAMES 'UTF8'");
+
+    // echo "Conexión exitosa a PostgreSQL";
+
+} catch (PDOException $e) {
+    die("Error de conexión: " . $e->getMessage());
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
