@@ -11,8 +11,8 @@ RUN apt-get update && apt-get install -y \
     curl \
     libcurl4-openssl-dev \
     libonig-dev \
-    libpq-dev \
     pkg-config \
+    libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd mysqli pdo pdo_mysql pdo_pgsql mbstring zip curl \
     && apt-get clean \
@@ -24,14 +24,16 @@ COPY . /var/www/html/
 
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
-RUN echo "DirectoryIndex login.php" > /etc/apache2/conf-available/override.conf \
-    && a2enconf override
+# Configurar DirectoryIndex correctamente
+RUN echo "DirectoryIndex login.php" > /etc/apache2/conf-available/override.conf && a2enconf override
 
-RUN echo "<Directory /var/www/html>\n\
+# 👇 Esta es la parte que te estaba generando el error: corrige <Directory> con cierre correcto
+RUN echo '<Directory "/var/www/html">\n\
     Options Indexes FollowSymLinks\n\
     AllowOverride All\n\
     Require all granted\n\
-</Directory>" >> /etc/apache2/apache2.conf
+</Directory>' >> /etc/apache2/apache2.conf
 
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 
