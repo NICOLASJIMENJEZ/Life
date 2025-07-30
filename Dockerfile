@@ -2,6 +2,7 @@ FROM php:8.2-apache
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Instala extensiones necesarias
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -18,21 +19,27 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Activa mod_rewrite de Apache
 RUN a2enmod rewrite
 
+# Copia todos los archivos del proyecto al contenedor
 COPY . /var/www/html/
 
+# Permisos correctos
 RUN chown -R www-data:www-data /var/www/html && chmod -R 755 /var/www/html
 
+# Cambia archivo por defecto a login.php
 RUN echo "DirectoryIndex login.php" > /etc/apache2/conf-available/override.conf \
     && a2enconf override
 
+# Agrega reglas para permitir .htaccess y sobreescritura
 RUN echo '<Directory "/var/www/html">
     Options Indexes FollowSymLinks
     AllowOverride All
     Require all granted
 </Directory>' >> /etc/apache2/apache2.conf
 
+# Establece nombre del servidor (opcional para Apache)
 RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 
