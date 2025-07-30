@@ -42,9 +42,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['rol_id'] = $usuario['rol_id'];
 
             if ($usuario['rol_id'] == 2) {
-                header("Location: dashboard.php"); // Admin
+                header("Location: modulos/dashboard.php"); // Admin
             } else {
-                header("Location: index.php"); // Usuario normal
+                header("Location: modulos/index.php"); // Usuario normal
             }
             exit();
         } else {
