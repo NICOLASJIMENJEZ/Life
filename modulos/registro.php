@@ -1,47 +1,55 @@
 <?php
-include '../modelo/conexion.php';
-if (!$conexion) {
-    die("Error de conexión: " . mysqli_connect_error());
-}
+include '../modelo/conexion.php'; // Ya está usando PDO aquí
 
+$error = "";
+
+// Solo si se envió el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombre = $_POST['nombre'];
-    $apellido = $_POST['apellido'];
-    $telefono = $_POST['telefono'];
-    $fechaNacimiento = $_POST['fechaNacimiento'];
-    $identificacion = $_POST['identificacion'];
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $rol_id = $_POST['rol_id'];
+    $nombre           = $_POST['nombre'];
+    $apellido         = $_POST['apellido'];
+    $telefono         = $_POST['telefono'];
+    $fechaNacimiento  = $_POST['fechaNacimiento'];
+    $identificacion   = $_POST['identificacion'];
+    $email            = $_POST['email'];
+    $password         = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $rol_id           = $_POST['rol_id'];
+    $fechaRegistro    = date('Y-m-d');
 
     if (empty($rol_id)) {
         echo "❌ Debes seleccionar un rol.";
         exit();
     }
 
-// Después (con PDO, correcto con PostgreSQL)
-$stmt = $conexion->prepare("INSERT INTO usuarios (...) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-$stmt->execute([$nombre, $apellido, $telefono, $fechaNacimiento, $identificacion, $email, $passwordHash, $fechaRegistro, $rol_id]);
+    try {
+        $sql = "INSERT INTO usuarios 
+            (nombre, apellido, telefono, fecha_nacimiento, identificacion, email, password, fecha_registro, rol_id) 
+            VALUES 
+            (:nombre, :apellido, :telefono, :fechaNacimiento, :identificacion, :email, :password, :fechaRegistro, :rol_id)";
 
+        $stmt = $conexion->prepare($sql);
 
-    if ($stmt = $conexion->prepare($sql)) {
-        $stmt->bind_param("sssssssi", $nombre, $apellido, $telefono, $fechaNacimiento, $identificacion, $email, $password, $rol_id);
+        $stmt->bindParam(':nombre', $nombre);
+        $stmt->bindParam(':apellido', $apellido);
+        $stmt->bindParam(':telefono', $telefono);
+        $stmt->bindParam(':fechaNacimiento', $fechaNacimiento);
+        $stmt->bindParam(':identificacion', $identificacion);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':fechaRegistro', $fechaRegistro);
+        $stmt->bindParam(':rol_id', $rol_id, PDO::PARAM_INT);
 
         if ($stmt->execute()) {
             header("Location: login.php");
             exit();
         } else {
-            echo "❌ Error al registrar: " . $stmt->error;
+            $error = "❌ Error al registrar el usuario.";
         }
-
-        $stmt->close();
-    } else {
-        echo "❌ Error al preparar la consulta: " . $conexion->error;
+    } catch (PDOException $e) {
+        $error = "❌ Error en la base de datos: " . $e->getMessage();
     }
-
-    $conexion->close();
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
