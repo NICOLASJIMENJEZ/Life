@@ -51,26 +51,31 @@ try {
   <tbody>
     <?php
     $sql = "SELECT id, nombre, apellido, telefono, identificacion, email, fechaNacimiento, rol_id FROM usuarios";
-    $resultado = $conexion->query($sql);
 
-    if ($resultado->rowCount() > 0) {
-        while ($fila = $resultado->fetch(PDO::FETCH_ASSOC)) {
-            echo "<tr>
-                    <td>{$fila['id']}</td>
-                    <td>{$fila['nombre']}</td>
-                    <td>{$fila['apellido']}</td>
-                    <td>{$fila['telefono']}</td>
-                    <td>{$fila['identificacion']}</td>
-                    <td>{$fila['email']}</td>
-                    <td>{$fila['fechaNacimiento']}</td>
-                    <td>{$fila['rol_id']}</td>
-                  </tr>";
+    try {
+        $resultado = $conexion->query($sql);
+
+        if ($resultado->rowCount() > 0) {
+            while ($fila = $resultado->fetch(PDO::FETCH_ASSOC)) {
+                echo "<tr>
+                        <td>{$fila['id']}</td>
+                        <td>{$fila['nombre']}</td>
+                        <td>{$fila['apellido']}</td>
+                        <td>{$fila['telefono']}</td>
+                        <td>{$fila['identificacion']}</td>
+                        <td>{$fila['email']}</td>
+                        <td>{$fila['fechaNacimiento']}</td>
+                        <td>{$fila['rol_id']}</td>
+                      </tr>";
+            }
+        } else {
+            echo "<tr><td colspan='8'>No hay usuarios registrados.</td></tr>";
         }
-    } else {
-        echo "<tr><td colspan='8'>No hay usuarios registrados.</td></tr>";
+    } catch (PDOException $e) {
+        echo "<tr><td colspan='8'>Error al consultar usuarios: " . $e->getMessage() . "</td></tr>";
     }
 
-    // Cerrar la conexión correctamente
+    // Cerrar conexión
     $conexion = null;
     ?>
   </tbody>
@@ -80,3 +85,4 @@ try {
 
 </body>
 </html>
+
