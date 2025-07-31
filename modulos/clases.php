@@ -1,77 +1,31 @@
+<?php
+  // Conexión a la base de datos
+  include("../modelo/conexion.php");
+
+  // Consultar lista de clientes
+  $consulta = "SELECT id, nombre FROM clientes";
+  $resultado = mysqli_query($conexion, $consulta);
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Agregar Rutina | SMART GYM</title>
+  <title>Agregar Rutina | LIFE GYM</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
-
   <style>
-    body {
-      background-color: #000;
-      color: #ccc;
-      font-family: 'Orbitron', sans-serif;
-    }
-
-    h2 {
-      text-shadow: 0 0 10px #00ff00;
-      color: #00ff00;
-    }
-
-    .form-control, .form-select {
-      background-color: #111;
-      color: #ccc;
-      border: 1px solid #28a745;
-      transition: all 0.3s ease-in-out;
-    }
-
-    .form-control:focus, .form-select:focus {
-      box-shadow: 0 0 15px #00ff00, 0 0 5px #ccc;
-      border-color: #28a745;
-    }
-
-    .btn-danger {
-      border-radius: 25px;
-      padding: 12px 28px;
-      font-size: 1.1rem;
-      background: linear-gradient(145deg, #28a745, #1a4d1a);
-      box-shadow: 0 0 15px #00ff00;
-      border: none;
-      color: #fff;
-    }
-
-    .btn-outline-light {
-      border-radius: 25px;
-      padding: 12px 28px;
-      font-size: 1.1rem;
-      border-color: #ccc;
-      color: #ccc;
-    }
-
-    .btn-outline-light:hover {
-      background-color: #ccc;
-      color: #000;
-    }
-
-    .bg-form {
-      background: linear-gradient(145deg, #111, #1a1a1a);
-      border-radius: 20px;
-      padding: 40px;
-      box-shadow: 0 0 35px rgba(0, 255, 0, 0.6), 0 0 10px rgba(255, 255, 255, 0.05);
-      max-width: 900px;
-    }
-
-    label {
-      font-size: 1rem;
-      color: #00ff00;
-    }
-
-    ::placeholder {
-      color: #aaa;
-    }
+    body { background-color: #000; color: #ccc; font-family: 'Orbitron', sans-serif; }
+    h2 { text-shadow: 0 0 10px #00ff00; color: #00ff00; }
+    .form-control, .form-select { background-color: #111; color: #ccc; border: 1px solid #28a745; transition: all 0.3s ease-in-out; }
+    .form-control:focus, .form-select:focus { box-shadow: 0 0 15px #00ff00, 0 0 5px #ccc; border-color: #28a745; }
+    .btn-danger { border-radius: 25px; padding: 12px 28px; font-size: 1.1rem; background: linear-gradient(145deg, #28a745, #1a4d1a); box-shadow: 0 0 15px #00ff00; border: none; color: #fff; }
+    .btn-outline-light { border-radius: 25px; padding: 12px 28px; font-size: 1.1rem; border-color: #ccc; color: #ccc; }
+    .btn-outline-light:hover { background-color: #ccc; color: #000; }
+    .bg-form { background: linear-gradient(145deg, #111, #1a1a1a); border-radius: 20px; padding: 40px; box-shadow: 0 0 35px rgba(0, 255, 0, 0.6), 0 0 10px rgba(255, 255, 255, 0.05); max-width: 900px; }
+    label { font-size: 1rem; color: #00ff00; }
+    ::placeholder { color: #aaa; }
   </style>
 </head>
 <body>
@@ -83,8 +37,13 @@
     <form action="guardar_clase.php" method="POST" enctype="multipart/form-data">
 
       <div class="mb-3">
-        <label for="cliente" class="form-label">Nombre del cliente</label>
-        <input type="text" name="cliente" id="cliente" class="form-control" placeholder="Nombre completo" required>
+        <label for="cliente_id" class="form-label">Cliente</label>
+        <select name="cliente_id" id="cliente_id" class="form-select" required>
+          <option value="">Seleccione un cliente...</option>
+          <?php while ($fila = mysqli_fetch_assoc($resultado)) { ?>
+            <option value="<?= $fila['id'] ?>"><?= $fila['nombre'] ?></option>
+          <?php } ?>
+        </select>
       </div>
 
       <div class="mb-3">
@@ -132,9 +91,7 @@
   </div>
 </div>
 
-<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>
 
