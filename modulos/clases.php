@@ -1,11 +1,15 @@
 <?php
-  // Conexión a la base de datos
- require_once("../modelo/conexion.php");
+// Conexión a la base de datos
+require_once("../modelo/conexion.php");
 
+// Verificar conexión antes de ejecutar consulta
+if (!isset($conexion) || $conexion->connect_error) {
+  die("Error de conexión con la base de datos: " . $conexion->connect_error);
+}
 
-  // Consultar lista de clientes
-  $consulta = "SELECT id, nombre FROM clientes";
-  $resultado = mysqli_query($conexion, $consulta);
+// Consultar lista de clientes
+$consulta = "SELECT id, nombre FROM clientes";
+$resultado = mysqli_query($conexion, $consulta);
 ?>
 
 <!DOCTYPE html>
@@ -19,12 +23,35 @@
   <style>
     body { background-color: #000; color: #ccc; font-family: 'Orbitron', sans-serif; }
     h2 { text-shadow: 0 0 10px #00ff00; color: #00ff00; }
-    .form-control, .form-select { background-color: #111; color: #ccc; border: 1px solid #28a745; transition: all 0.3s ease-in-out; }
-    .form-control:focus, .form-select:focus { box-shadow: 0 0 15px #00ff00, 0 0 5px #ccc; border-color: #28a745; }
-    .btn-danger { border-radius: 25px; padding: 12px 28px; font-size: 1.1rem; background: linear-gradient(145deg, #28a745, #1a4d1a); box-shadow: 0 0 15px #00ff00; border: none; color: #fff; }
-    .btn-outline-light { border-radius: 25px; padding: 12px 28px; font-size: 1.1rem; border-color: #ccc; color: #ccc; }
-    .btn-outline-light:hover { background-color: #ccc; color: #000; }
-    .bg-form { background: linear-gradient(145deg, #111, #1a1a1a); border-radius: 20px; padding: 40px; box-shadow: 0 0 35px rgba(0, 255, 0, 0.6), 0 0 10px rgba(255, 255, 255, 0.05); max-width: 900px; }
+    .form-control, .form-select {
+      background-color: #111; color: #ccc;
+      border: 1px solid #28a745;
+      transition: all 0.3s ease-in-out;
+    }
+    .form-control:focus, .form-select:focus {
+      box-shadow: 0 0 15px #00ff00, 0 0 5px #ccc;
+      border-color: #28a745;
+    }
+    .btn-danger {
+      border-radius: 25px; padding: 12px 28px; font-size: 1.1rem;
+      background: linear-gradient(145deg, #28a745, #1a4d1a);
+      box-shadow: 0 0 15px #00ff00;
+      border: none; color: #fff;
+    }
+    .btn-outline-light {
+      border-radius: 25px; padding: 12px 28px; font-size: 1.1rem;
+      border-color: #ccc; color: #ccc;
+    }
+    .btn-outline-light:hover {
+      background-color: #ccc; color: #000;
+    }
+    .bg-form {
+      background: linear-gradient(145deg, #111, #1a1a1a);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 0 35px rgba(0, 255, 0, 0.6), 0 0 10px rgba(255, 255, 255, 0.05);
+      max-width: 900px;
+    }
     label { font-size: 1rem; color: #00ff00; }
     ::placeholder { color: #aaa; }
   </style>
@@ -42,7 +69,7 @@
         <select name="cliente_id" id="cliente_id" class="form-select" required>
           <option value="">Seleccione un cliente...</option>
           <?php while ($fila = mysqli_fetch_assoc($resultado)) { ?>
-            <option value="<?= $fila['id'] ?>"><?= $fila['nombre'] ?></option>
+            <option value="<?= $fila['id'] ?>"><?= htmlspecialchars($fila['nombre']) ?></option>
           <?php } ?>
         </select>
       </div>
