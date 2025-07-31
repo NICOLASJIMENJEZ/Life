@@ -1,6 +1,7 @@
 <?php
   // Conexión a la base de datos
-  include("../modelo/conexion.php");
+ require_once("../modelo/conexion.php");
+
 
   // Consultar lista de clientes
   $consulta = "SELECT id, nombre FROM clientes";
