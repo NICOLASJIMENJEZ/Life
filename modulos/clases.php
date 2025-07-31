@@ -1,15 +1,8 @@
 <?php
-require_once("../modelo/conexion.php");
+$conexion = pg_connect("host=dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com port=5432 dbname=life_gym_db user=life_gym_db_user password=0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p");
 
-if (!isset($conexion)) {
-  die("Error de conexión con la base de datos PostgreSQL.");
-}
-
-$consulta = "SELECT id, nombre FROM clientes";
-$resultado = pg_query($conexion, $consulta);
-
-if (!$resultado) {
-  die("Error al consultar clientes: " . pg_last_error($conexion));
+if (!$conexion) {
+    die("Error de conexión con la base de datos PostgreSQL.");
 }
 ?>
 
