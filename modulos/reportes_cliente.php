@@ -1,15 +1,18 @@
 <?php
+// ✅ Conexión correcta a PostgreSQL con Render y SSL
 try {
     $conexion = new PDO(
-        "pgsql:host=switchyard.proxy.rlwy.net;port=5432;dbname=life_gym;charset=utf8",
-        "root",
-        "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ",
+        "pgsql:host=dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com;port=5432;dbname=life_gym_db;sslmode=require",
+        "life_gym_db_user",
+        "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p",
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
+    // echo "✅ Conectado correctamente";
 } catch (PDOException $e) {
     die("❌ Error de conexión: " . $e->getMessage());
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
