@@ -1,27 +1,34 @@
 body {
   font-family: 'Orbitron', sans-serif;
-  background-color: #000;
+  background-color: #000; /* Negro */
 }
 
 .rutina-card {
-  background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
-  border: 2px solid #dc3545;
+  background: linear-gradient(145deg, #1a1a1a, #0d0d0d); /* Fondo oscuro */
+  border: 2px solid #28a745; /* Verde Bootstrap */
   transition: transform 0.3s, box-shadow 0.3s;
   border-radius: 15px;
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+  box-shadow: 0 0 15px rgba(0, 255, 0, 0.3); /* Sombra verde */
 }
 
 .rutina-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
+  box-shadow: 0 0 25px rgba(0, 255, 0, 0.6); /* Sombra más intensa al hacer hover */
 }
 
 .card-title {
   font-size: 1.5rem;
+  color: #00ff00; /* Título en verde fosforescente */
 }
 
 .btn-outline-danger {
   border-radius: 20px;
   padding: 6px 14px;
+  border-color: #28a745;
+  color: #28a745;
 }
 
+.btn-outline-danger:hover {
+  background-color: #28a745;
+  color: #000;
+}
