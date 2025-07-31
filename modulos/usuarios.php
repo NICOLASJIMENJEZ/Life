@@ -60,7 +60,9 @@ try {
     $sql = "SELECT id, nombre, apellido, telefono, identificacion, email, fechaNacimiento, rol_id FROM usuarios";
     $resultado = $conexion->query($sql);
 
-    if ($resultado->num_rows > 0) {
+if ($consulta->rowCount() > 0) {
+    // hay resultados
+}
         while ($fila = $resultado->fetch_assoc()) {
             echo "<tr>
                     <td>{$fila['id']}</td>
