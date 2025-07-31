@@ -1,16 +1,16 @@
 <?php
-$host = 'switchyard.proxy.rlwy.net';
-$dbname = 'life_gym';
-$user = 'root';
-$password = 'yHVACjdVpisuiHXnOqKCEfWbkJuktloQ';
-$port = 3306; // Puerto MySQL
+$host = 'TU_HOST_POSTGRESQL'; // Ej: dpg-xxxxxxx.oregon-postgres.render.com
+$port = 5432;
+$dbname = 'life_gym_db';
+$username = 'life_gym_db_user';
+$password = 'TU_PASSWORD';
 
 try {
-    $dsn = "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4";
-    $conexion = new PDO($dsn, $user, $password, [
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+    $conexion = new PDO($dsn, $username, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
-    // echo "✅ Conexión exitosa con PDO.";
+    // echo "✅ Conexión exitosa a PostgreSQL.";
 } catch (PDOException $e) {
     die("❌ Error de conexión: " . $e->getMessage());
 }
