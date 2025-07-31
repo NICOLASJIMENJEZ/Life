@@ -3,20 +3,13 @@ $host = "dpg-d24l0l15pdvs73bvvmq0-a";
 $port = "5432";
 $dbname = "life_gym_db";
 $username = "life_gym_db_user";
-$password = "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p"; // Reemplaza por la contraseña real
+$password = "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p";
 
 try {
     $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
     $conexion = new PDO($dsn, $username, $password);
-
-    // Modo de error para excepciones
     $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Opcional: establecer el conjunto de caracteres
     $conexion->exec("SET NAMES 'UTF8'");
-
-    // echo "Conexión exitosa a PostgreSQL";
-
 } catch (PDOException $e) {
     die("Error de conexión: " . $e->getMessage());
 }
@@ -60,10 +53,8 @@ try {
     $sql = "SELECT id, nombre, apellido, telefono, identificacion, email, fechaNacimiento, rol_id FROM usuarios";
     $resultado = $conexion->query($sql);
 
-if ($consulta->rowCount() > 0) {
-    // hay resultados
-}
-        while ($fila = $resultado->fetch_assoc()) {
+    if ($resultado->rowCount() > 0) {
+        while ($fila = $resultado->fetch(PDO::FETCH_ASSOC)) {
             echo "<tr>
                     <td>{$fila['id']}</td>
                     <td>{$fila['nombre']}</td>
@@ -79,7 +70,8 @@ if ($consulta->rowCount() > 0) {
         echo "<tr><td colspan='8'>No hay usuarios registrados.</td></tr>";
     }
 
-  $pdo = null; 
+    // Cerrar la conexión correctamente
+    $conexion = null;
     ?>
   </tbody>
 </table>
