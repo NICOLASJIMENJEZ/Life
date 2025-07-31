@@ -1,5 +1,5 @@
 <?php
-$host = 'TU_HOST_POSTGRESQL'; // Ej: dpg-xxxxxxx.oregon-postgres.render.com
+$host = "dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com";// Ej: dpg-xxxxxxx.oregon-postgres.render.com
 $port = 5432;
 $dbname = 'life_gym_db';
 $username = 'life_gym_db_user';
