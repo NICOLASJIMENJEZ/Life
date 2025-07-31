@@ -1,16 +1,16 @@
 <?php
-$host = "dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com";// Ej: dpg-xxxxxxx.oregon-postgres.render.com
+$host = 'dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com';
 $port = 5432;
 $dbname = 'life_gym_db';
 $username = 'life_gym_db_user';
-$password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
+$password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p'; // Copiada correctamente
 
 try {
-    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
     $conexion = new PDO($dsn, $username, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
-    // echo "✅ Conexión exitosa a PostgreSQL.";
+    // echo "✅ Conexión exitosa";
 } catch (PDOException $e) {
     die("❌ Error de conexión: " . $e->getMessage());
 }
