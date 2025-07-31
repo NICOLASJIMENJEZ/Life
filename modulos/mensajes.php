@@ -3,7 +3,7 @@ $host = 'dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com';
 $port = 5432;
 $dbname = 'life_gym_db';
 $username = 'life_gym_db_user';
-$password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p'; // Copiada correctamente
+$password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
 
 try {
     $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
@@ -15,10 +15,6 @@ try {
     die("❌ Error de conexión: " . $e->getMessage());
 }
 ?>
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -52,24 +48,29 @@ try {
   </thead>
   <tbody>
     <?php
-    $sql = "SELECT id, nombre, email, mensaje, fecha_envio FROM contactos";
-    $resultado = $conexion->query($sql);
+    try {
+        $sql = "SELECT id, nombre, email, mensaje, fecha_envio FROM contactos";
+        $resultado = $conexion->query($sql);
 
-    if ($resultado->num_rows > 0) {
-        while ($fila = $resultado->fetch_assoc()) {
-            echo "<tr>
-                    <td>{$fila['id']}</td>
-                    <td>{$fila['nombre']}</td>
-                    <td>{$fila['email']}</td>
-                    <td>{$fila['mensaje']}</td>
-                    <td>{$fila['fecha_envio']}</td>
-                  </tr>";
+        if ($resultado->rowCount() > 0) {
+            while ($fila = $resultado->fetch(PDO::FETCH_ASSOC)) {
+                echo "<tr>
+                        <td>{$fila['id']}</td>
+                        <td>{$fila['nombre']}</td>
+                        <td>{$fila['email']}</td>
+                        <td>{$fila['mensaje']}</td>
+                        <td>{$fila['fecha_envio']}</td>
+                      </tr>";
+            }
+        } else {
+            echo "<tr><td colspan='5'>No hay mensajes registrados.</td></tr>";
         }
-    } else {
-        echo "<tr><td colspan='5'>No hay mensajes registrados.</td></tr>";
+    } catch (PDOException $e) {
+        echo "<tr><td colspan='5'>❌ Error al consultar los mensajes: " . $e->getMessage() . "</td></tr>";
     }
 
-    $conexion->close();
+    // Cierre de conexión (en PDO se hace asignando null)
+    $conexion = null;
     ?>
   </tbody>
 </table>
