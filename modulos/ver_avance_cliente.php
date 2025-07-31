@@ -1,5 +1,5 @@
 <?php
-$host = "switchyard.proxy.rlwy.net";
+$host = "$host = "dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com";
 $port = "5432";
 $db = "life_gym";
 $user = "root";
