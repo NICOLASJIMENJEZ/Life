@@ -1,15 +1,19 @@
 <?php
-// Conexión a la base de datos
+// Conexión a la base de datos (asegúrate de tener este archivo configurado correctamente)
 require_once("../modelo/conexion.php");
 
 // Verificar conexión antes de ejecutar consulta
-if (!isset($conexion) || $conexion->connect_error) {
-  die("Error de conexión con la base de datos: " . $conexion->connect_error);
+if (!$conexion) {
+  die("Error de conexión con la base de datos PostgreSQL.");
 }
 
 // Consultar lista de clientes
 $consulta = "SELECT id, nombre FROM clientes";
-$resultado = mysqli_query($conexion, $consulta);
+$resultado = pg_query($conexion, $consulta);
+
+if (!$resultado) {
+  die("Error al consultar la tabla clientes: " . pg_last_error($conexion));
+}
 ?>
 
 <!DOCTYPE html>
@@ -68,8 +72,8 @@ $resultado = mysqli_query($conexion, $consulta);
         <label for="cliente_id" class="form-label">Cliente</label>
         <select name="cliente_id" id="cliente_id" class="form-select" required>
           <option value="">Seleccione un cliente...</option>
-          <?php while ($fila = mysqli_fetch_assoc($resultado)) { ?>
-            <option value="<?= $fila['id'] ?>"><?= htmlspecialchars($fila['nombre']) ?></option>
+          <?php while ($fila = pg_fetch_assoc($resultado)) { ?>
+            <option value="<?= htmlspecialchars($fila['id']) ?>"><?= htmlspecialchars($fila['nombre']) ?></option>
           <?php } ?>
         </select>
       </div>
@@ -122,4 +126,5 @@ $resultado = mysqli_query($conexion, $consulta);
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
 
