@@ -3,7 +3,7 @@ $host = "dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com";// Ej: dpg-xxxxx
 $port = 5432;
 $dbname = 'life_gym_db';
 $username = 'life_gym_db_user';
-$password = 'TU_PASSWORD';
+$password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
 
 try {
     $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
