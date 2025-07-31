@@ -12,44 +12,47 @@
   <style>
     body {
       background-color: #000;
-      color: #fff;
+      color: #ccc;
       font-family: 'Orbitron', sans-serif;
     }
 
     h2 {
-      text-shadow: 0 0 10px #ff0040;
+      text-shadow: 0 0 10px #00ff00;
+      color: #00ff00;
     }
 
     .form-control, .form-select {
       background-color: #111;
-      color: #fff;
-      border: 1px solid #ff0033;
+      color: #ccc;
+      border: 1px solid #28a745;
       transition: all 0.3s ease-in-out;
     }
 
     .form-control:focus, .form-select:focus {
-      box-shadow: 0 0 15px #ff0033, 0 0 5px #fff;
-      border-color: #ff0033;
+      box-shadow: 0 0 15px #00ff00, 0 0 5px #ccc;
+      border-color: #28a745;
     }
 
     .btn-danger {
       border-radius: 25px;
       padding: 12px 28px;
       font-size: 1.1rem;
-      background: linear-gradient(145deg, #ff0033, #99001a);
-      box-shadow: 0 0 15px #ff0033;
+      background: linear-gradient(145deg, #28a745, #1a4d1a);
+      box-shadow: 0 0 15px #00ff00;
       border: none;
+      color: #fff;
     }
 
     .btn-outline-light {
       border-radius: 25px;
       padding: 12px 28px;
       font-size: 1.1rem;
-      transition: all 0.3s ease-in-out;
+      border-color: #ccc;
+      color: #ccc;
     }
 
     .btn-outline-light:hover {
-      background-color: #fff;
+      background-color: #ccc;
       color: #000;
     }
 
@@ -57,24 +60,24 @@
       background: linear-gradient(145deg, #111, #1a1a1a);
       border-radius: 20px;
       padding: 40px;
-      box-shadow: 0 0 35px rgba(255, 0, 55, 0.6), 0 0 10px rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 35px rgba(0, 255, 0, 0.6), 0 0 10px rgba(255, 255, 255, 0.05);
       max-width: 900px;
     }
 
     label {
       font-size: 1rem;
-      color: #ff3366;
+      color: #00ff00;
     }
 
     ::placeholder {
-      color: #ccc;
+      color: #aaa;
     }
   </style>
 </head>
 <body>
 
 <div class="container py-5">
-  <h2 class="text-center text-danger mb-4">Agregar Nueva Rutina</h2>
+  <h2 class="text-center mb-4">Agregar Nueva Rutina</h2>
 
   <div class="bg-form mx-auto">
     <form action="guardar_clase.php" method="POST" enctype="multipart/form-data">
@@ -134,3 +137,4 @@
 
 </body>
 </html>
+
