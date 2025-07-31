@@ -170,7 +170,7 @@ foreach ($resultado as $fila) {
 
   <!-- Botón Volver al inicio -->
   <div class="text-center mt-5">
-    <a href="AQUI_TU_LINK" class="btn btn-outline-light btn-lg">← Volver al inicio</a>
+    <a href="index.php" class="btn btn-outline-light btn-lg">← Volver al inicio</a>
   </div>
 
 </div>
