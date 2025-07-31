@@ -2,8 +2,8 @@
 // modulos/contacto.php
 
 // Incluir conexión PDO
-if (file_exists("../modelo/conexion.php")) {
-    require_once("../modelo/conexion.php");
+if (file_exists("/modelo/conexion.php")) {
+    require_once("/modelo/conexion.php");
 
     // Validación para asegurarse de que $conexion esté definido
     if (!isset($conexion) || !$conexion instanceof PDO) {
