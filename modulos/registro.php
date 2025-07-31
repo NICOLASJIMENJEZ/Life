@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $stmt->bindParam(':rol_id', $rol_id, PDO::PARAM_INT);
 
             if ($stmt->execute()) {
-                $mensaje = "✅ Usuario registrado correctamente. Redirigiendo al login...";
+$mensaje .= "<script>setTimeout(() => { window.location.href = '/login.php'; }, 2000);</script>";
                 header("refresh:2;url=login.php"); // Redirige después de 2 segundos
             } else {
                 $error = "❌ Error al registrar el usuario.";
