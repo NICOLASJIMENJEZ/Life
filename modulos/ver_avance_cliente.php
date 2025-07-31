@@ -1,6 +1,6 @@
 <?php
 
-$host = "dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com"; // ✅ CORRECTO
+$host = "dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com";
 $port = "5432";
 $db = "life_gym_db"; // Asegúrate que el nombre esté bien escrito
 $user = "life_gym_db_user";
