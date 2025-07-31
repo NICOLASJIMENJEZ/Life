@@ -49,78 +49,92 @@ foreach ($resultado as $fila) {
   <!-- AOS -->
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
- <style>
+<style>
   body {
-    background-color: #000;
-    color: #d1d1d1;
+    background-color: #0a0a0a;
+    color: #e0e0e0;
     font-family: 'Orbitron', sans-serif;
   }
 
+  h1, h2 {
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #00cc66;
+    text-shadow: 0 0 10px rgba(0, 204, 102, 0.3);
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    color: #88ffaa;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+  }
+
   .rutina-card {
-    background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
-    border: 2px solid #28a745;
+    background: linear-gradient(135deg, #121212, #1e1e1e);
+    border: 1px solid #2ecc71;
     border-radius: 15px;
-    transition: transform 0.3s, box-shadow 0.3s;
-    box-shadow: 0 0 15px rgba(40, 167, 69, 0.2);
+    box-shadow: 0 0 20px rgba(46, 204, 113, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
   .rutina-card:hover {
     transform: scale(1.03);
-    box-shadow: 0 0 25px rgba(40, 167, 69, 0.4);
+    box-shadow: 0 0 30px rgba(46, 204, 113, 0.4);
   }
 
   .card-title {
-    color: #28a745;
+    color: #2ecc71;
+    font-size: 1.4rem;
+    text-align: center;
+    margin-bottom: 1rem;
   }
 
   .btn-ver-rutina {
-    background-color: #28a745;
-    color: #fff;
-    border-radius: 20px;
-    transition: background-color 0.3s;
+    background-color: #2ecc71;
+    color: #000;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
   }
 
   .btn-ver-rutina:hover {
-    background-color: #218838;
+    background-color: #27ae60;
+    color: #fff;
   }
 
   .btn-outline-danger {
-    color: #28a745;
-    border-color: #28a745;
-    transition: all 0.3s;
+    color: #2ecc71;
+    border-color: #2ecc71;
     border-radius: 20px;
   }
 
   .btn-outline-danger:hover {
-    background-color: #28a745;
-    color: #fff;
+    background-color: #2ecc71;
+    color: #000;
   }
 
   .rutina-info img {
     width: 100px;
     border-radius: 10px;
     margin: 5px;
-    border: 2px solid #28a745;
+    border: 2px solid #2ecc71;
   }
 
   .rutina-info p {
-    color: #ccc;
-  }
-
-  h1 {
-    color: #28a745;
-    text-shadow: 0 0 10px #1f3e2d;
-  }
-
-  h2 {
-    color: #a0d6a5;
-    text-shadow: 0 0 8px #1f3e2d;
+    color: #bfbfbf;
   }
 
   .btn-outline-light {
-    border-color: #ccc;
     color: #ccc;
+    border-color: #ccc;
     border-radius: 25px;
+    font-weight: bold;
+    padding: 12px 24px;
   }
 
   .btn-outline-light:hover {
@@ -129,15 +143,20 @@ foreach ($resultado as $fila) {
   }
 
   .text-muted {
-    color: #888 !important;
+    color: #666 !important;
+  }
+
+  .container {
+    max-width: 1200px;
   }
 </style>
+
 
 </head>
 <body>
 
 <div class="container py-5">
-  <h1 class="text-center text-danger mb-5">🔥 Rutinas SMART GYM 🔥</h1>
+  <h1 class="text-center text-danger mb-5">🔥 Rutinas LIFE GYM 🔥</h1>
 
   <!-- Sección Torso -->
   <section class="mb-5">
