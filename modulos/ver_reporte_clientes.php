@@ -45,30 +45,30 @@ if (isset($_POST['actualizar_id'])) {
     $triceps = $_POST['carga_triceps'];
     $hombro = $_POST['carga_hombro'];
 
-    $stmt = $conexion->prepare("
-        UPDATE reportes SET
-            peso = :peso, estatura = :estatura, edad = :edad,
-            carga_pecho = :pecho, carga_sentadilla = :sentadilla,
-            carga_biceps = :biceps, carga_triceps = :triceps, carga_hombro = :hombro
-        WHERE id = :id
-    ");
-    $stmt->execute([
-        ':peso' => $peso,
-        ':estatura' => $estatura,
-        ':edad' => $edad,
-        ':pecho' => $pecho,
-        ':sentadilla' => $sentadilla,
-        ':biceps' => $biceps,
-        ':triceps' => $triceps,
-        ':hombro' => $hombro,
-        ':id' => $id
-    ]);
-}
-
-// Consultar después de eliminar o actualizar
 $stmt = $conexion->prepare("SELECT * FROM reportes WHERE nombre = :nombre ORDER BY fecha_reporte DESC");
 $stmt->execute([':nombre' => $nombreCliente]);
 $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if (!empty($resultado)) {
+    foreach ($resultado as $fila) {
+        echo "<tr>
+                <td>{$fila['fecha_reporte']}</td>
+                <td>{$fila['peso']}</td>
+                <td>{$fila['estatura']}</td>
+                <td>{$fila['edad']}</td>
+                <td>{$fila['carga_pecho']}</td>
+                <td>{$fila['carga_sentadilla']}</td>
+                <td>{$fila['carga_biceps']}</td>
+                <td>{$fila['carga_triceps']}</td>
+                <td>{$fila['carga_hombro']}</td>
+              </tr>";
+    }
+} else {
+    echo "<tr><td colspan='9'>No hay reportes para este cliente.</td></tr>";
+}
+
+// Cerrar conexión correctamente
+$conexion = null;
 ?>
 
 <!DOCTYPE html>
