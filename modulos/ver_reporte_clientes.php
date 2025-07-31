@@ -1,5 +1,4 @@
 <?php
-
 $host = "dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com";
 $port = 5432;
 $db = "life_gym_db";
@@ -8,16 +7,6 @@ $pass = "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p";
 
 try {
     $conexion = new PDO("pgsql:host=$host;port=$port;dbname=$db;sslmode=require", $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
-} catch (PDOException $e) {
-    die("Error de conexión: " . $e->getMessage());
-}
-
-
-
-try {
-    $conexion = new PDO("pgsql:host=$host;port=$port;dbname=$db", $user, $pass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 } catch (PDOException $e) {
@@ -45,30 +34,30 @@ if (isset($_POST['actualizar_id'])) {
     $triceps = $_POST['carga_triceps'];
     $hombro = $_POST['carga_hombro'];
 
+    $stmt = $conexion->prepare("
+        UPDATE reportes SET
+            peso = :peso, estatura = :estatura, edad = :edad,
+            carga_pecho = :pecho, carga_sentadilla = :sentadilla,
+            carga_biceps = :biceps, carga_triceps = :triceps, carga_hombro = :hombro
+        WHERE id = :id
+    ");
+    $stmt->execute([
+        ':peso' => $peso,
+        ':estatura' => $estatura,
+        ':edad' => $edad,
+        ':pecho' => $pecho,
+        ':sentadilla' => $sentadilla,
+        ':biceps' => $biceps,
+        ':triceps' => $triceps,
+        ':hombro' => $hombro,
+        ':id' => $id
+    ]);
+}
+
+// Consultar reportes
 $stmt = $conexion->prepare("SELECT * FROM reportes WHERE nombre = :nombre ORDER BY fecha_reporte DESC");
 $stmt->execute([':nombre' => $nombreCliente]);
 $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-if (!empty($resultado)) {
-    foreach ($resultado as $fila) {
-        echo "<tr>
-                <td>{$fila['fecha_reporte']}</td>
-                <td>{$fila['peso']}</td>
-                <td>{$fila['estatura']}</td>
-                <td>{$fila['edad']}</td>
-                <td>{$fila['carga_pecho']}</td>
-                <td>{$fila['carga_sentadilla']}</td>
-                <td>{$fila['carga_biceps']}</td>
-                <td>{$fila['carga_triceps']}</td>
-                <td>{$fila['carga_hombro']}</td>
-              </tr>";
-    }
-} else {
-    echo "<tr><td colspan='9'>No hay reportes para este cliente.</td></tr>";
-}
-
-// Cerrar conexión correctamente
-$conexion = null;
 ?>
 
 <!DOCTYPE html>
@@ -98,38 +87,33 @@ $conexion = null;
     </tr>
   </thead>
   <tbody>
-    <?php
-    if ($resultado->num_rows > 0) {
-        while ($fila = $resultado->fetch_assoc()) {
-            echo "
-            <form method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "?nombre=" . urlencode($nombreCliente) . "'>
-            <tr>
-                <td>{$fila['fecha_reporte']}</td>
-                <td><input type='number' step='0.1' name='peso' value='{$fila['peso']}' class='form-control'></td>
-                <td><input type='number' step='0.01' name='estatura' value='{$fila['estatura']}' class='form-control'></td>
-                <td><input type='number' name='edad' value='{$fila['edad']}' class='form-control'></td>
-                <td><input type='number' name='carga_pecho' value='{$fila['carga_pecho']}' class='form-control'></td>
-                <td><input type='number' name='carga_sentadilla' value='{$fila['carga_sentadilla']}' class='form-control'></td>
-                <td><input type='number' name='carga_biceps' value='{$fila['carga_biceps']}' class='form-control'></td>
-                <td><input type='number' name='carga_triceps' value='{$fila['carga_triceps']}' class='form-control'></td>
-                <td><input type='number' name='carga_hombro' value='{$fila['carga_hombro']}' class='form-control'></td>
-                <td class='d-flex flex-column gap-1'>
-                    <input type='hidden' name='actualizar_id' value='{$fila['id']}'>
-                    <button type='submit' class='btn btn-sm btn-primary'>Guardar</button>
-            </form>
-            <form method='POST' action='" . htmlspecialchars($_SERVER["PHP_SELF"]) . "?nombre=" . urlencode($nombreCliente) . "'>
-                    <input type='hidden' name='eliminar_id' value='{$fila['id']}'>
-                    <button type='submit' class='btn btn-sm btn-danger' onclick='return confirm(\"¿Eliminar este reporte?\")'>Eliminar</button>
-                </form>
-                </td>
-            </tr>";
-        }
-    } else {
-        echo "<tr><td colspan='10'>No hay reportes disponibles.</td></tr>";
-    }
-
-    $conexion->close();
-    ?>
+    <?php if (!empty($resultado)): ?>
+      <?php foreach ($resultado as $fila): ?>
+        <tr>
+          <form method="POST" action="?nombre=<?= urlencode($nombreCliente) ?>">
+            <td><?= htmlspecialchars($fila['fecha_reporte']) ?></td>
+            <td><input type="number" step="0.1" name="peso" value="<?= $fila['peso'] ?>" class="form-control"></td>
+            <td><input type="number" step="0.01" name="estatura" value="<?= $fila['estatura'] ?>" class="form-control"></td>
+            <td><input type="number" name="edad" value="<?= $fila['edad'] ?>" class="form-control"></td>
+            <td><input type="number" name="carga_pecho" value="<?= $fila['carga_pecho'] ?>" class="form-control"></td>
+            <td><input type="number" name="carga_sentadilla" value="<?= $fila['carga_sentadilla'] ?>" class="form-control"></td>
+            <td><input type="number" name="carga_biceps" value="<?= $fila['carga_biceps'] ?>" class="form-control"></td>
+            <td><input type="number" name="carga_triceps" value="<?= $fila['carga_triceps'] ?>" class="form-control"></td>
+            <td><input type="number" name="carga_hombro" value="<?= $fila['carga_hombro'] ?>" class="form-control"></td>
+            <td class="d-flex flex-column gap-1">
+              <input type="hidden" name="actualizar_id" value="<?= $fila['id'] ?>">
+              <button type="submit" class="btn btn-sm btn-primary mb-1">Guardar</button>
+          </form>
+          <form method="POST" action="?nombre=<?= urlencode($nombreCliente) ?>">
+              <input type="hidden" name="eliminar_id" value="<?= $fila['id'] ?>">
+              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este reporte?')">Eliminar</button>
+          </form>
+            </td>
+        </tr>
+      <?php endforeach; ?>
+    <?php else: ?>
+      <tr><td colspan="10">No hay reportes disponibles.</td></tr>
+    <?php endif; ?>
   </tbody>
 </table>
 
@@ -137,3 +121,6 @@ $conexion = null;
 
 </body>
 </html>
+
+<?php $conexion = null; ?>
+
