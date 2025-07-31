@@ -64,7 +64,7 @@ try {
                         <td>{$fila['telefono']}</td>
                         <td>{$fila['identificacion']}</td>
                         <td>{$fila['email']}</td>
-                        <td>{$fila['fechaNacimiento']}</td>
+                      <td>{$fila['fechanacimiento']}</td>
                         <td>{$fila['rol_id']}</td>
                       </tr>";
             }
