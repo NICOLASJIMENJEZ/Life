@@ -1,16 +1,17 @@
 <?php
-// Conexión con PDO
+// ✅ Conexión con PostgreSQL en Render usando SSL
 try {
     $conexion = new PDO(
-        "mysql:host=switchyard.proxy.rlwy.net;dbname=life_gym;charset=utf8mb4",
-        "root",
-        "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ",
+        "pgsql:host=dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com;port=5432;dbname=life_gym_db;sslmode=require",
+        "life_gym_db_user",
+        "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p",
         [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 } catch (PDOException $e) {
     die("❌ Error de conexión: " . $e->getMessage());
 }
 
+// ✅ Lógica del formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = $_POST['nombre'];
     $peso = $_POST['peso'];
@@ -25,19 +26,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     try {
         $stmt = $conexion->prepare("INSERT INTO reportes 
             (nombre, peso, estatura, edad, carga_pecho, carga_sentadilla, carga_biceps, carga_triceps, carga_hombro)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            VALUES (:nombre, :peso, :estatura, :edad, :pecho, :sentadilla, :biceps, :triceps, :hombro)");
 
         $stmt->execute([
-            $nombre, $peso, $estatura, $edad,
-            $pecho, $sentadilla, $biceps, $triceps, $hombro
+            ':nombre' => $nombre,
+            ':peso' => $peso,
+            ':estatura' => $estatura,
+            ':edad' => $edad,
+            ':pecho' => $pecho,
+            ':sentadilla' => $sentadilla,
+            ':biceps' => $biceps,
+            ':triceps' => $triceps,
+            ':hombro' => $hombro
         ]);
 
-        echo "<script>alert('Reporte guardado con éxito'); window.location.href='reportes.php';</script>";
+        echo "<script>alert('✅ Reporte guardado con éxito'); window.location.href='reportes.php';</script>";
     } catch (PDOException $e) {
         echo "❌ Error al guardar el reporte: " . $e->getMessage();
     }
 }
 ?>
+
 
 
 <!DOCTYPE html>
