@@ -1,17 +1,19 @@
 <?php
-$host = "$host = "dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com";
+
+$host = "dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com"; // ✅ CORRECTO
 $port = "5432";
-$db = "life_gym";
-$user = "root";
-$pass = "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ";
+$db = "life_gym_db"; // Asegúrate que el nombre esté bien escrito
+$user = "life_gym_db_user";
+$pass = "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p";
 
 try {
-    $conexion = new PDO("pgsql:host=$host;port=$port;dbname=$db", $user, $pass, [
+    $conexion = new PDO("pgsql:host=$host;port=$port;dbname=$db;sslmode=require", $user, $pass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 } catch (PDOException $e) {
     die("Error de conexión: " . $e->getMessage());
 }
+
 
 $nombreCliente = isset($_GET['nombre']) ? $_GET['nombre'] : '';
 
