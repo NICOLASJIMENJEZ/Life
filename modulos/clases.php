@@ -16,26 +16,58 @@
       font-family: 'Orbitron', sans-serif;
     }
 
+    h2 {
+      text-shadow: 0 0 10px #ff0040;
+    }
+
     .form-control, .form-select {
       background-color: #111;
       color: #fff;
-      border: 1px solid #dc3545;
+      border: 1px solid #ff0033;
+      transition: all 0.3s ease-in-out;
     }
 
     .form-control:focus, .form-select:focus {
-      box-shadow: 0 0 10px #dc3545;
+      box-shadow: 0 0 15px #ff0033, 0 0 5px #fff;
+      border-color: #ff0033;
     }
 
     .btn-danger {
       border-radius: 25px;
-      padding: 10px 20px;
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      background: linear-gradient(145deg, #ff0033, #99001a);
+      box-shadow: 0 0 15px #ff0033;
+      border: none;
+    }
+
+    .btn-outline-light {
+      border-radius: 25px;
+      padding: 12px 28px;
+      font-size: 1.1rem;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .btn-outline-light:hover {
+      background-color: #fff;
+      color: #000;
     }
 
     .bg-form {
-      background-color: #1a1a1a;
-      border-radius: 15px;
-      padding: 30px;
-      box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+      background: linear-gradient(145deg, #111, #1a1a1a);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 0 35px rgba(255, 0, 55, 0.6), 0 0 10px rgba(255, 255, 255, 0.05);
+      max-width: 900px;
+    }
+
+    label {
+      font-size: 1rem;
+      color: #ff3366;
+    }
+
+    ::placeholder {
+      color: #ccc;
     }
   </style>
 </head>
@@ -44,16 +76,14 @@
 <div class="container py-5">
   <h2 class="text-center text-danger mb-4">Agregar Nueva Rutina</h2>
 
-  <div class="bg-form mx-auto" style="max-width: 700px;">
+  <div class="bg-form mx-auto">
     <form action="guardar_clase.php" method="POST" enctype="multipart/form-data">
 
-      <!-- Nombre del Cliente -->
       <div class="mb-3">
         <label for="cliente" class="form-label">Nombre del cliente</label>
         <input type="text" name="cliente" id="cliente" class="form-control" placeholder="Nombre completo" required>
       </div>
 
-      <!-- Grupo muscular -->
       <div class="mb-3">
         <label for="grupo" class="form-label">Grupo Muscular</label>
         <select name="grupo" id="grupo" class="form-select" required>
@@ -63,25 +93,21 @@
         </select>
       </div>
 
-      <!-- Parte específica -->
       <div class="mb-3">
         <label for="titulo" class="form-label">Parte del cuerpo</label>
         <input type="text" name="titulo" id="titulo" class="form-control" placeholder="Ej: Bíceps, Cuádriceps..." required>
       </div>
 
-      <!-- Descripción -->
       <div class="mb-3">
         <label for="descripcion" class="form-label">Descripción</label>
         <textarea name="descripcion" id="descripcion" rows="4" class="form-control" placeholder="Describe la rutina..." required></textarea>
       </div>
 
-      <!-- Tiempo de descanso -->
       <div class="mb-3">
         <label for="tiempo_descanso" class="form-label">Tiempo de descanso (ej: 30 segundos)</label>
         <input type="text" name="tiempo_descanso" id="tiempo_descanso" class="form-control" required>
       </div>
 
-      <!-- Imágenes -->
       <div class="mb-3">
         <label class="form-label">Imágenes (opcional)</label>
         <input type="file" name="imagen1" class="form-control mb-2">
@@ -89,7 +115,6 @@
         <input type="file" name="imagen3" class="form-control">
       </div>
 
-      <!-- Video -->
       <div class="mb-3">
         <label for="video" class="form-label">Link del video de YouTube</label>
         <input type="url" name="video" id="video" class="form-control" placeholder="https://youtube.com/...">
