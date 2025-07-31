@@ -1,20 +1,18 @@
 <?php
-// Conexión a la base de datos (asegúrate de tener este archivo configurado correctamente)
 require_once("../modelo/conexion.php");
 
-// Verificar conexión antes de ejecutar consulta
-if (!$conexion) {
+if (!isset($conexion)) {
   die("Error de conexión con la base de datos PostgreSQL.");
 }
 
-// Consultar lista de clientes
 $consulta = "SELECT id, nombre FROM clientes";
 $resultado = pg_query($conexion, $consulta);
 
 if (!$resultado) {
-  die("Error al consultar la tabla clientes: " . pg_last_error($conexion));
+  die("Error al consultar clientes: " . pg_last_error($conexion));
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
