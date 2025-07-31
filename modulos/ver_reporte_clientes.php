@@ -5,13 +5,13 @@ $db = "life_gym_db";
 $user = "life_gym_db_user";
 $pass = "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p";
 
+// Sincronizar secuencia de la tabla 'clases' (por si está desfasada)
 try {
-    $conexion = new PDO("pgsql:host=$host;port=$port;dbname=$db;sslmode=require", $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
+    $conexion->exec("SELECT setval('clases_id_seq', (SELECT MAX(id) FROM clases))");
 } catch (PDOException $e) {
-    die("Error de conexión: " . $e->getMessage());
+   
 }
+
 
 $nombreCliente = isset($_GET['nombre']) ? urldecode($_GET['nombre']) : '';
 
