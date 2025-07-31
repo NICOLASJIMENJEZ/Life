@@ -52,35 +52,84 @@ foreach ($resultado as $fila) {
  <style>
   body {
     background-color: #000;
-    color: #fff;
+    color: #d1d1d1;
     font-family: 'Orbitron', sans-serif;
   }
+
   .rutina-card {
     background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
-    border: 2px solid #dc3545;
+    border: 2px solid #28a745;
     border-radius: 15px;
     transition: transform 0.3s, box-shadow 0.3s;
-    box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+    box-shadow: 0 0 15px rgba(40, 167, 69, 0.2);
   }
+
   .rutina-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
+    transform: scale(1.03);
+    box-shadow: 0 0 25px rgba(40, 167, 69, 0.4);
   }
+
+  .card-title {
+    color: #28a745;
+  }
+
   .btn-ver-rutina {
-    background-color: #dc3545;
+    background-color: #28a745;
     color: #fff;
     border-radius: 20px;
+    transition: background-color 0.3s;
   }
+
   .btn-ver-rutina:hover {
-    background-color: #ff4444;
+    background-color: #218838;
   }
+
+  .btn-outline-danger {
+    color: #28a745;
+    border-color: #28a745;
+    transition: all 0.3s;
+    border-radius: 20px;
+  }
+
+  .btn-outline-danger:hover {
+    background-color: #28a745;
+    color: #fff;
+  }
+
   .rutina-info img {
     width: 100px;
     border-radius: 10px;
     margin: 5px;
+    border: 2px solid #28a745;
   }
+
   .rutina-info p {
-    color: #fff;
+    color: #ccc;
+  }
+
+  h1 {
+    color: #28a745;
+    text-shadow: 0 0 10px #1f3e2d;
+  }
+
+  h2 {
+    color: #a0d6a5;
+    text-shadow: 0 0 8px #1f3e2d;
+  }
+
+  .btn-outline-light {
+    border-color: #ccc;
+    color: #ccc;
+    border-radius: 25px;
+  }
+
+  .btn-outline-light:hover {
+    background-color: #ccc;
+    color: #000;
+  }
+
+  .text-muted {
+    color: #888 !important;
   }
 </style>
 
