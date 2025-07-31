@@ -79,7 +79,7 @@ if ($consulta->rowCount() > 0) {
         echo "<tr><td colspan='8'>No hay usuarios registrados.</td></tr>";
     }
 
-    $conexion->close();
+  $pdo = null; 
     ?>
   </tbody>
 </table>
