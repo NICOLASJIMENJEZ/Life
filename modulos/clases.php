@@ -1,17 +1,13 @@
 <?php
-$host = 'dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com';
-$port = '5432';
-$dbname = 'life_gym_db';
-$user = 'life_gym_db_user';
-$password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
 
-$dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=disable";
+$connection_string = "host=dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com port=5432 dbname=life_gym_db user=life_gym_db_user password=0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p";
 
-try {
-    $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-    echo "Conectado sin SSL OK";
-} catch (PDOException $e) {
-    die("Error: " . $e->getMessage());
+$conexion = pg_connect($connection_string);
+
+if (!$conexion) {
+    die("❌ Error de conexión");
+} else {
+    echo "✅ Conectado con SSL";
 }
 
 
