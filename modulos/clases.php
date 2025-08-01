@@ -1,19 +1,85 @@
 <?php
-// Conexión PostgreSQL
-$conexion = pg_connect("host=dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com port=5432 dbname=life_gym_db user=life_gym_db_user password=0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p");
+// Parámetros conexión PostgreSQL
+$host = 'tu_host';  // ej: localhost o IP/host remoto
+$port = '5432';
+$dbname = 'tu_basededatos';
+$user = 'tu_usuario';
+$password = 'tu_contraseña';
 
-if (!$conexion) {
-    die("❌ Error de conexión con la base de datos PostgreSQL.");
+// Cadena de conexión PDO para PostgreSQL
+$dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+
+try {
+    // Crear conexión PDO
+    $pdo = new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+} catch (PDOException $e) {
+    die("Error de conexión: " . $e->getMessage());
 }
 
-// Ejecutar consulta
-$consulta = "SELECT id, nombre FROM clientes";
-$resultado = pg_query($conexion, $consulta);
+// Recibir datos del formulario
+$cliente = $_POST['cliente'] ?? '';
+$grupo = $_POST['grupo'] ?? '';
+$titulo = $_POST['titulo'] ?? '';
+$descripcion = $_POST['descripcion'] ?? '';
+$tiempo_descanso = $_POST['tiempo_descanso'] ?? '';
+$video = $_POST['video'] ?? '';
 
-if (!$resultado) {
-    die("❌ Error al consultar la tabla clientes.");
+// Función para leer imagen y convertirla a binario para BYTEA
+function cargarImagen($inputName) {
+    if (isset($_FILES[$inputName]) && $_FILES[$inputName]['error'] === UPLOAD_ERR_OK) {
+        return file_get_contents($_FILES[$inputName]['tmp_name']);
+    }
+    return null;
+}
+
+$imagen1 = cargarImagen('imagen1');
+$imagen2 = cargarImagen('imagen2');
+$imagen3 = cargarImagen('imagen3');
+
+try {
+    // Preparar consulta con parámetros
+    $sql = "INSERT INTO rutinas (cliente, grupo, titulo, descripcion, tiempo_descanso, imagen1, imagen2, imagen3, video) 
+            VALUES (:cliente, :grupo, :titulo, :descripcion, :tiempo_descanso, :imagen1, :imagen2, :imagen3, :video)";
+
+    $stmt = $pdo->prepare($sql);
+
+    // Vincular parámetros
+    $stmt->bindParam(':cliente', $cliente, PDO::PARAM_STR);
+    $stmt->bindParam(':grupo', $grupo, PDO::PARAM_STR);
+    $stmt->bindParam(':titulo', $titulo, PDO::PARAM_STR);
+    $stmt->bindParam(':descripcion', $descripcion, PDO::PARAM_STR);
+    $stmt->bindParam(':tiempo_descanso', $tiempo_descanso, PDO::PARAM_STR);
+    
+    if ($imagen1 !== null) {
+        $stmt->bindParam(':imagen1', $imagen1, PDO::PARAM_LOB);
+    } else {
+        $stmt->bindValue(':imagen1', null, PDO::PARAM_NULL);
+    }
+    if ($imagen2 !== null) {
+        $stmt->bindParam(':imagen2', $imagen2, PDO::PARAM_LOB);
+    } else {
+        $stmt->bindValue(':imagen2', null, PDO::PARAM_NULL);
+    }
+    if ($imagen3 !== null) {
+        $stmt->bindParam(':imagen3', $imagen3, PDO::PARAM_LOB);
+    } else {
+        $stmt->bindValue(':imagen3', null, PDO::PARAM_NULL);
+    }
+    
+    $stmt->bindParam(':video', $video, PDO::PARAM_STR);
+
+    // Ejecutar consulta
+    $stmt->execute();
+
+    echo "<p style='color:lime;'>Rutina guardada con éxito!</p>";
+    echo "<p><a href='dashboard.php'>Volver al Dashboard</a></p>";
+} catch (PDOException $e) {
+    echo "<p style='color:red;'>Error al guardar la rutina: " . $e->getMessage() . "</p>";
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
