@@ -15,8 +15,6 @@ if (!$resultado) {
 }
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -70,8 +68,8 @@ if (!$resultado) {
     <form action="guardar_clase.php" method="POST" enctype="multipart/form-data">
 
       <div class="mb-3">
-        <label for="cliente_id" class="form-label">Cliente</label>
-        <select name="cliente_id" id="cliente_id" class="form-select" required>
+        <label class="form-label">Cliente</label>
+        <select name="cliente" class="form-select" required>
           <option value="">Seleccione un cliente...</option>
           <?php while ($fila = pg_fetch_assoc($resultado)) { ?>
             <option value="<?= htmlspecialchars($fila['id']) ?>"><?= htmlspecialchars($fila['nombre']) ?></option>
@@ -127,5 +125,6 @@ if (!$resultado) {
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
 
 
