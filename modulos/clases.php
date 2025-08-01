@@ -1,22 +1,22 @@
 <?php
 // Parámetros conexión PostgreSQL
-$host = 'dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com';  // ej: localhost o IP/host remoto
+$host = 'dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com';  
 $port = '5432';
 $dbname = 'life_gym_db';
 $user = 'life_gym_db_user';
 $password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
 
-// Cadena de conexión PDO para PostgreSQL
-$dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+// Cadena de conexión PDO para PostgreSQL con SSL
+$dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
 
 try {
-    // Crear conexión PDO
     $pdo = new PDO($dsn, $user, $password, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 } catch (PDOException $e) {
     die("Error de conexión: " . $e->getMessage());
 }
+
 
 // Recibir datos del formulario
 $cliente = $_POST['cliente'] ?? '';
