@@ -1,25 +1,19 @@
 <?php
-// Parámetros conexión PostgreSQL (pon tus datos reales)
 $host = 'dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com';
 $port = '5432';
 $dbname = 'life_gym_db';
 $user = 'life_gym_db_user';
 $password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
 
-// Cambia sslmode a 'require', 'prefer' o 'disable' según necesites probar
-$sslmode = 'prefer';  // prueba cambiar a 'require' o 'disable' si no conecta
-
-$dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=$sslmode";
+$dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=disable";
 
 try {
-    $pdo = new PDO($dsn, $user, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_TIMEOUT => 5,
-    ]);
-    echo "✅ Conectado correctamente con sslmode=$sslmode<br>";
+    $pdo = new PDO($dsn, $user, $password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    echo "Conectado sin SSL OK";
 } catch (PDOException $e) {
-    die("❌ Error de conexión: " . $e->getMessage());
+    die("Error: " . $e->getMessage());
 }
+
 
 // Recibir datos del formulario
 $cliente = $_POST['cliente'] ?? '';
