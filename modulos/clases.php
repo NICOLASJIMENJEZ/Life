@@ -1,10 +1,10 @@
 <?php
 // Parámetros conexión PostgreSQL
-$host = 'tu_host';  // ej: localhost o IP/host remoto
+$host = 'dpg-d24l0l15pdvs73bvvmq0-a.db.your-region.render.com';  // ej: localhost o IP/host remoto
 $port = '5432';
-$dbname = 'tu_basededatos';
-$user = 'tu_usuario';
-$password = 'tu_contraseña';
+$dbname = 'life_gym_db';
+$user = 'life_gym_db_user';
+$password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
 
 // Cadena de conexión PDO para PostgreSQL
 $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
