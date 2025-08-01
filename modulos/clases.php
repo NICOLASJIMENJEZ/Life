@@ -1,15 +1,21 @@
 <?php
 
-$connection_string = "host=dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com port=5432 dbname=life_gym_db user=life_gym_db_user password=0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p";
+$host = 'dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com';
+$port = '5432';
+$dbname = 'life_gym_db';
+$user = 'life_gym_db_user';
+$password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
 
-$conexion = pg_connect($connection_string);
+$dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
 
-if (!$conexion) {
-    die("❌ Error de conexión");
-} else {
-    echo "✅ Conectado con SSL";
+try {
+    $pdo = new PDO($dsn, $user, $password);
+    // Para mostrar errores con excepción
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "✅ Conexión exitosa con PDO y SSL";
+} catch (PDOException $e) {
+    echo "❌ Error de conexión: " . $e->getMessage();
 }
-
 
 // Recibir datos del formulario
 $cliente = $_POST['cliente'] ?? '';
