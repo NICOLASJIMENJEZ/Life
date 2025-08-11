@@ -1,21 +1,25 @@
 <?php
+$host = "dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com";
+$port = "5432";
+$dbname = "smart_gym";
+$user = "smart_gym_user";
+$password = "XKfNZf5rmTttbQYqV4Q8cK3O7mF5ttIb";
 
-$host = 'dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com';
-$port = '5432';
-$dbname = 'life_gym_db';
-$user = 'life_gym_db_user';
-$password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
-
-$dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
-
+// Conexión usando PDO con SSL forzado
 try {
-    $pdo = new PDO($dsn, $user, $password);
-    // Para mostrar errores con excepción
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "✅ Conexión exitosa con PDO y SSL<br>";
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
+    $conexion = new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+    ]);
+
+    echo "✅ Conexión exitosa a PostgreSQL en Render con SSL";
+
 } catch (PDOException $e) {
-    die("❌ Error de conexión: " . $e->getMessage());
+    echo "❌ Error de conexión: " . $e->getMessage();
 }
+
+
 
 // Recibir datos del formulario
 $cliente = $_POST['cliente'] ?? '';
