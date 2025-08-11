@@ -14,7 +14,7 @@ try {
     echo "Conexión exitosa";
 } catch (PDOException $e) {
     echo "❌ Error de conexión: " . $e->getMessage();
-
+}  // <-- Aquí cerramos el catch correctamente
 
 // Recibir datos del formulario
 $cliente = $_POST['cliente'] ?? '';
@@ -60,5 +60,6 @@ try {
     echo "<p><a href='dashboard.php'>⬅ Volver al Dashboard</a></p>";
 } catch (PDOException $e) {
     echo "<p style='color:red;'>❌ Error al guardar la rutina: " . $e->getMessage() . "</p>";
+}  // <-- Cerramos también este catch
 
 ?>
