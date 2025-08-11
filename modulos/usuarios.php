@@ -1,9 +1,20 @@
 <?php
-$conexion = new mysqli("switchyard.proxy.rlwy.net", "root", "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ", "life_gym");
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
+$host = "dpg-d24l0l15pdvs73bvvmq0-a";
+$port = "5432";
+$dbname = "life_gym_db";
+$username = "life_gym_db_user";
+$password = "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p";
+
+try {
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
+    $conexion = new PDO($dsn, $username, $password);
+    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $conexion->exec("SET NAMES 'UTF8'");
+} catch (PDOException $e) {
+    die("Error de conexión: " . $e->getMessage());
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -40,26 +51,32 @@ if ($conexion->connect_error) {
   <tbody>
     <?php
     $sql = "SELECT id, nombre, apellido, telefono, identificacion, email, fechaNacimiento, rol_id FROM usuarios";
-    $resultado = $conexion->query($sql);
 
-    if ($resultado->num_rows > 0) {
-        while ($fila = $resultado->fetch_assoc()) {
-            echo "<tr>
-                    <td>{$fila['id']}</td>
-                    <td>{$fila['nombre']}</td>
-                    <td>{$fila['apellido']}</td>
-                    <td>{$fila['telefono']}</td>
-                    <td>{$fila['identificacion']}</td>
-                    <td>{$fila['email']}</td>
-                    <td>{$fila['fechaNacimiento']}</td>
-                    <td>{$fila['rol_id']}</td>
-                  </tr>";
+    try {
+        $resultado = $conexion->query($sql);
+
+        if ($resultado->rowCount() > 0) {
+            while ($fila = $resultado->fetch(PDO::FETCH_ASSOC)) {
+                echo "<tr>
+                        <td>{$fila['id']}</td>
+                        <td>{$fila['nombre']}</td>
+                        <td>{$fila['apellido']}</td>
+                        <td>{$fila['telefono']}</td>
+                        <td>{$fila['identificacion']}</td>
+                        <td>{$fila['email']}</td>
+                      <td>{$fila['fechanacimiento']}</td>
+                        <td>{$fila['rol_id']}</td>
+                      </tr>";
+            }
+        } else {
+            echo "<tr><td colspan='8'>No hay usuarios registrados.</td></tr>";
         }
-    } else {
-        echo "<tr><td colspan='8'>No hay usuarios registrados.</td></tr>";
+    } catch (PDOException $e) {
+        echo "<tr><td colspan='8'>Error al consultar usuarios: " . $e->getMessage() . "</td></tr>";
     }
 
-    $conexion->close();
+    // Cerrar conexión
+    $conexion = null;
     ?>
   </tbody>
 </table>

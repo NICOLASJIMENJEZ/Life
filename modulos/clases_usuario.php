@@ -1,21 +1,28 @@
 <?php
-$host = "switchyard.proxy.rlwy.net";
-$user = "root";
-$pass = "yHVACjdVpisuiHXnOqKCEfWbkJuktloQ";
-$db = "life_gym";
+$host = "dpg-d24l0l15pdvs73bvvmq0-a.oregon-postgres.render.com";
+$port = 5432;
+$db = "life_gym_db";
+$user = "life_gym_db_user";
+$pass = "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p";
 
-$conn = new mysqli($host, $user, $pass, $db);
-if ($conn->connect_error) {
-    die("❌ Error de conexión: " . $conn->connect_error);
+try {
+    $dsn = "pgsql:host=$host;port=$port;dbname=$db";
+    $conn = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+    ]);
+} catch (PDOException $e) {
+    die("❌ Error de conexión: " . $e->getMessage());
 }
 
 $sql = "SELECT * FROM clases ORDER BY fecha_creacion DESC";
-$resultado = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $torso = [];
 $inferior = [];
 
-while ($fila = $resultado->fetch_assoc()) {
+foreach ($resultado as $fila) {
     $grupo = isset($fila['grupo']) ? strtolower($fila['grupo']) : 'otro';
     if ($grupo === 'torso') {
         $torso[] = $fila;
@@ -24,6 +31,7 @@ while ($fila = $resultado->fetch_assoc()) {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -41,46 +49,114 @@ while ($fila = $resultado->fetch_assoc()) {
   <!-- AOS -->
   <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
 
- <style>
+<style>
   body {
-    background-color: #000;
-    color: #fff;
+    background-color: #0a0a0a;
+    color: #e0e0e0;
     font-family: 'Orbitron', sans-serif;
   }
+
+  h1, h2 {
+    font-family: 'Orbitron', sans-serif;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #00cc66;
+    text-shadow: 0 0 10px rgba(0, 204, 102, 0.3);
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+    color: #88ffaa;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+  }
+
   .rutina-card {
-    background: linear-gradient(145deg, #1a1a1a, #0d0d0d);
-    border: 2px solid #dc3545;
+    background: linear-gradient(135deg, #121212, #1e1e1e);
+    border: 1px solid #2ecc71;
     border-radius: 15px;
-    transition: transform 0.3s, box-shadow 0.3s;
-    box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+    box-shadow: 0 0 20px rgba(46, 204, 113, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
+
   .rutina-card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 25px rgba(255, 0, 0, 0.6);
+    transform: scale(1.03);
+    box-shadow: 0 0 30px rgba(46, 204, 113, 0.4);
   }
+
+  .card-title {
+    color: #2ecc71;
+    font-size: 1.4rem;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
   .btn-ver-rutina {
-    background-color: #dc3545;
+    background-color: #2ecc71;
+    color: #000;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  .btn-ver-rutina:hover {
+    background-color: #27ae60;
     color: #fff;
+  }
+
+  .btn-outline-danger {
+    color: #2ecc71;
+    border-color: #2ecc71;
     border-radius: 20px;
   }
-  .btn-ver-rutina:hover {
-    background-color: #ff4444;
+
+  .btn-outline-danger:hover {
+    background-color: #2ecc71;
+    color: #000;
   }
+
   .rutina-info img {
     width: 100px;
     border-radius: 10px;
     margin: 5px;
+    border: 2px solid #2ecc71;
   }
+
   .rutina-info p {
-    color: #fff;
+    color: #bfbfbf;
+  }
+
+  .btn-outline-light {
+    color: #ccc;
+    border-color: #ccc;
+    border-radius: 25px;
+    font-weight: bold;
+    padding: 12px 24px;
+  }
+
+  .btn-outline-light:hover {
+    background-color: #ccc;
+    color: #000;
+  }
+
+  .text-muted {
+    color: #666 !important;
+  }
+
+  .container {
+    max-width: 1200px;
   }
 </style>
+
 
 </head>
 <body>
 
 <div class="container py-5">
-  <h1 class="text-center text-danger mb-5">🔥 Rutinas SMART GYM 🔥</h1>
+  <h1 class="text-center text-danger mb-5">🔥 Rutinas LIFE GYM 🔥</h1>
 
   <!-- Sección Torso -->
   <section class="mb-5">
@@ -162,7 +238,7 @@ while ($fila = $resultado->fetch_assoc()) {
 
   <!-- Botón Volver al inicio -->
   <div class="text-center mt-5">
-    <a href="AQUI_TU_LINK" class="btn btn-outline-light btn-lg">← Volver al inicio</a>
+  <a href="index.php" class="btn btn-outline-light btn-lg">← Volver al inicio</a>
   </div>
 
 </div>

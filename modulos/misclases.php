@@ -4,13 +4,21 @@ if (!isset($_SESSION['usuario_id']) || $_SESSION['rol_id'] != 1) {
     header("Location: login.php");
     exit();
 }
+
 include '../modelo/conexion.php';
 
-$clases = $conexion->query("SELECT c.*, u.nombre AS nombre_instructor 
-                            FROM clases c 
-                            INNER JOIN usuarios u ON c.instructor_id = u.id 
-                            ORDER BY c.fecha ASC");
+try {
+    $stmt = $conexion->prepare("SELECT c.*, u.nombre AS nombre_instructor 
+                                FROM clases c 
+                                INNER JOIN usuarios u ON c.instructor_id = u.id 
+                                ORDER BY c.fecha ASC");
+    $stmt->execute();
+    $clases = $stmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+    die("❌ Error al obtener clases: " . $e->getMessage());
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">

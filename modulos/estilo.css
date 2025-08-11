@@ -76,7 +76,7 @@ body {
 
 .clase-card {
   background-color: #111;
-  border: 2px solid #1cd22244;
+  border: 2px solid #0bee13cb;
   border-radius: 12px;
   overflow: hidden;
   transition: transform 0.3s ease, box-shadow 0.3s ease;

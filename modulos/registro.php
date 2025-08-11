@@ -1,43 +1,53 @@
 <?php
-include '../modelo/conexion.php';
-if (!$conexion) {
-    die("Error de conexión: " . mysqli_connect_error());
-}
+include '../modelo/conexion.php'; // Asegúrate de que define $conn como instancia de PDO
 
+$error = "";
+$mensaje = "";
+
+// Solo si se envió el formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombre = $_POST['nombre'];
-    $apellido = $_POST['apellido'];
-    $telefono = $_POST['telefono'];
-    $fechaNacimiento = $_POST['fechaNacimiento'];
-    $identificacion = $_POST['identificacion'];
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $rol_id = $_POST['rol_id'];
+    $nombre           = $_POST['nombre'];
+    $apellido         = $_POST['apellido'];
+    $telefono         = $_POST['telefono'];
+    $fechaNacimiento  = $_POST['fechaNacimiento'];
+    $identificacion   = $_POST['identificacion'];
+    $email            = $_POST['email'];
+    $password         = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $rol_id           = $_POST['rol_id'];
+    $fechaRegistro    = date('Y-m-d');
 
     if (empty($rol_id)) {
-        echo "❌ Debes seleccionar un rol.";
-        exit();
-    }
-
-    $sql = "INSERT INTO usuarios (nombre, apellido, telefono, fechaNacimiento, identificacion, email, password, rol_id)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-
-    if ($stmt = $conexion->prepare($sql)) {
-        $stmt->bind_param("sssssssi", $nombre, $apellido, $telefono, $fechaNacimiento, $identificacion, $email, $password, $rol_id);
-
-        if ($stmt->execute()) {
-            header("Location: login.php");
-            exit();
-        } else {
-            echo "❌ Error al registrar: " . $stmt->error;
-        }
-
-        $stmt->close();
+        $error = "❌ Debes seleccionar un rol.";
     } else {
-        echo "❌ Error al preparar la consulta: " . $conexion->error;
-    }
+        try {
+            // ✅ Corregido: fecha_nacimiento → fechaNacimiento
+            $sql = "INSERT INTO usuarios 
+                (nombre, apellido, telefono, fechaNacimiento, identificacion, email, password, fecha_registro, rol_id) 
+                VALUES 
+                (:nombre, :apellido, :telefono, :fechaNacimiento, :identificacion, :email, :password, :fechaRegistro, :rol_id)";
 
-    $conexion->close();
+            $stmt = $conn->prepare($sql);
+
+            $stmt->bindParam(':nombre', $nombre);
+            $stmt->bindParam(':apellido', $apellido);
+            $stmt->bindParam(':telefono', $telefono);
+            $stmt->bindParam(':fechaNacimiento', $fechaNacimiento);
+            $stmt->bindParam(':identificacion', $identificacion);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':password', $password);
+            $stmt->bindParam(':fechaRegistro', $fechaRegistro);
+            $stmt->bindParam(':rol_id', $rol_id, PDO::PARAM_INT);
+
+            if ($stmt->execute()) {
+$mensaje .= "<script>setTimeout(() => { window.location.href = '/login.php'; }, 2000);</script>";
+                header("refresh:2;url=login.php"); // Redirige después de 2 segundos
+            } else {
+                $error = "❌ Error al registrar el usuario.";
+            }
+        } catch (PDOException $e) {
+            $error = "❌ Error en la base de datos: " . $e->getMessage();
+        }
+    }
 }
 ?>
 
@@ -47,11 +57,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8">
   <title>Registro - Life Gym</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- Bootstrap & Google Fonts -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
-
   <style>
     body {
       background-color: #000;
@@ -164,12 +171,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <button type="submit" class="btn-submit">Registrarse</button>
     </form>
 
+    <?php if (!empty($mensaje)) : ?>
+      <div class="alert alert-success mt-3 text-center" role="alert">
+        <?= $mensaje ?>
+      </div>
+    <?php endif; ?>
+
+    <?php if (!empty($error)) : ?>
+      <div class="alert alert-danger mt-3 text-center" role="alert">
+        <?= $error ?>
+      </div>
+    <?php endif; ?>
+
     <div class="mt-3 text-center">
       <a href="login.php" class="text-white">¿Ya tienes cuenta? Inicia sesión aquí</a>
     </div>
   </div>
 
-  <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
