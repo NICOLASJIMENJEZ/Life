@@ -33,9 +33,9 @@ if ($nombre && $email && $mensaje) {
                 VALUES (:nombre, :email, :mensaje)";
         $stmt = $conexion->prepare($sql);
 
-        $stmt->bindParam(':nombre', $nombre);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':mensaje', $mensaje);
+        $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
+        $stmt->bindParam(':email', $email, PDO::PARAM_STR);
+        $stmt->bindParam(':mensaje', $mensaje, PDO::PARAM_STR);
 
         $stmt->execute();
 
