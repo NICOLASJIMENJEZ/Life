@@ -60,5 +60,5 @@ try {
     echo "<p><a href='dashboard.php'>⬅ Volver al Dashboard</a></p>";
 } catch (PDOException $e) {
     echo "<p style='color:red;'>❌ Error al guardar la rutina: " . $e->getMessage() . "</p>";
-}
+
 ?>
