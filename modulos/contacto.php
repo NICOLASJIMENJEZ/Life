@@ -1,21 +1,21 @@
 <?php
 // modulos/contacto.php
 
-// Ruta al archivo de conexión
-$rutaConexion = __DIR__ . "/../modelo/conexion.php";
+// ===== CONFIGURACIÓN DE CONEXIÓN =====
+$host = "dpg-d24l0l15pdvs73bvvmq0-a";     // Cambia si tu servidor es diferente
+$dbname = "life_gym_db"; // Cambia por el nombre de tu base de datos
+$usuario = "life_gym_db_user";       // Usuario de la base de datos
+$password = "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p";          // Contraseña (si tienes)
 
-if (!file_exists($rutaConexion)) {
-    die("❌ Error: No se puede incluir el archivo de conexión.");
+// Crear conexión con PDO
+try {
+    $conexion = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $usuario, $password);
+    $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("❌ Error de conexión: " . $e->getMessage());
 }
 
-require_once($rutaConexion);
-
-// Verificar que $conexion exista y sea PDO
-if (!isset($conexion) || !$conexion instanceof PDO) {
-    die("❌ Error: La conexión a la base de datos no está disponible.");
-}
-
-// Capturar datos del formulario con limpieza básica
+// ===== CAPTURA DE DATOS =====
 $nombre  = trim($_POST['nombre'] ?? '');
 $email   = trim($_POST['email'] ?? '');
 $mensaje = trim($_POST['mensaje'] ?? '');
@@ -30,8 +30,8 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     die("⚠️ El correo electrónico no es válido.");
 }
 
+// ===== INSERTAR EN LA BASE DE DATOS =====
 try {
-    // Preparar e insertar en la base de datos
     $sql = "INSERT INTO contactos (nombre, email, mensaje) VALUES (:nombre, :email, :mensaje)";
     $stmt = $conexion->prepare($sql);
 
