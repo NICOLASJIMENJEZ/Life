@@ -5,24 +5,36 @@ $db = "life_gym_db";
 $user = "life_gym_db_user";
 $pass = "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p";
 
-// Sincronizar secuencia de la tabla 'clases' (por si está desfasada)
+// Crear conexión con PDO
+try {
+    $conexion = new PDO(
+        "pgsql:host=$host;port=$port;dbname=$db",
+        $user,
+        $pass,
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
+} catch (PDOException $e) {
+    die("❌ Error de conexión: " . $e->getMessage());
+}
+
+// Sincronizar secuencia de la tabla 'clases'
 try {
     $conexion->exec("SELECT setval('clases_id_seq', (SELECT MAX(id) FROM clases))");
 } catch (PDOException $e) {
-   
+    // Manejo silencioso del error si la secuencia no existe
 }
 
-
+// Obtener nombre del cliente
 $nombreCliente = isset($_GET['nombre']) ? urldecode($_GET['nombre']) : '';
 
-// Eliminar
+// Eliminar reporte
 if (isset($_POST['eliminar_id'])) {
     $idEliminar = intval($_POST['eliminar_id']);
     $stmt = $conexion->prepare("DELETE FROM reportes WHERE id = :id");
     $stmt->execute([':id' => $idEliminar]);
 }
 
-// Actualizar
+// Actualizar reporte
 if (isset($_POST['actualizar_id'])) {
     $id = intval($_POST['actualizar_id']);
     $peso = $_POST['peso'];
@@ -54,7 +66,7 @@ if (isset($_POST['actualizar_id'])) {
     ]);
 }
 
-// Consultar reportes
+// Consultar reportes del cliente
 $stmt = $conexion->prepare("SELECT * FROM reportes WHERE nombre = :nombre ORDER BY fecha_reporte DESC");
 $stmt->execute([':nombre' => $nombreCliente]);
 $resultado = $stmt->fetchAll(PDO::FETCH_ASSOC);
