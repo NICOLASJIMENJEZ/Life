@@ -1,22 +1,17 @@
 <?php
-$host = "dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com";
-$port = "5432";
-$dbname = "life_gym_db";
-$user = "life_gym_db_user";
-$password = "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p";
+include_once(__DIR__ . "/../modelo/conexion.php");
 
-$dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
+// Consulta para mostrar las rutinas
+$sql = "SELECT * FROM rutinas";
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-try {
-    $pdo = new PDO($dsn, $user, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
-    ]);
-    echo "Conexión exitosa";
-} catch (PDOException $e) {
-    echo "❌ Error de conexión: " . $e->getMessage();
-}  // <-- Aquí cerramos el catch correctamente
+foreach ($resultados as $fila) {
+    echo $fila['titulo'] . "<br>";
+}  // <-- Cerrar el foreach aquí
 
-// Recibir datos del formulario
+// Ahora recibimos datos del formulario (POST)
 $cliente = $_POST['cliente'] ?? '';
 $grupo = $_POST['grupo'] ?? '';
 $titulo = $_POST['titulo'] ?? '';
@@ -60,6 +55,6 @@ try {
     echo "<p><a href='dashboard.php'>⬅ Volver al Dashboard</a></p>";
 } catch (PDOException $e) {
     echo "<p style='color:red;'>❌ Error al guardar la rutina: " . $e->getMessage() . "</p>";
-}  // <-- Cerramos también este catch
-
+}
 ?>
+
