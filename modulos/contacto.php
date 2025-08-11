@@ -14,6 +14,15 @@ try {
 } catch (PDOException $e) {
     die("❌ Error de conexión: " . $e->getMessage());
 }
+try {
+    $stmt = $conexion->query("SELECT version()");
+    $version = $stmt->fetchColumn();
+    echo "Conexión exitosa a PostgreSQL. Versión: " . $version;
+} catch (PDOException $e) {
+    die("❌ Error de prueba de conexión: " . $e->getMessage());
+}
+exit;
+
 
 // Capturar y limpiar datos
 $nombre  = trim($_POST['nombre'] ?? '');
