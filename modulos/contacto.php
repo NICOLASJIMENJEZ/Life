@@ -1,6 +1,6 @@
 <?php
 // Configuración de conexión a PostgreSQL (Render)
-$host = "dpg-d2410115pdvs73bvvnq0-a";
+$host = "dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com";
 $port = 5432;
 $dbname = "life_gym_db";
 $user = "life_gym_db_user";
