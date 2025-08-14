@@ -5,13 +5,14 @@ $dbname = "life_gym_db";
 $user = "life_gym_db_user";
 $password = "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p";
 
-$dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=prefer"; // probar también disable
+// Forzar uso de SSL
+$dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
 
 try {
     $pdo = new PDO($dsn, $user, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
-    echo "Conexión exitosa";
+    echo "✅ Conexión exitosa";
 } catch (PDOException $e) {
     die("❌ Error de conexión a la base de datos: " . $e->getMessage());
 }
