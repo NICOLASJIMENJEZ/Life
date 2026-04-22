@@ -109,7 +109,7 @@ try {
                     <li class="nav-item"><a class="nav-link" href="#nosotros">NOSOTROS</a></li>
                     <li class="nav-item"><a class="nav-link" href="#zonas">ZONAS</a></li>
                     <li class="nav-item"><a class="nav-link" href="#planes">PLANES</a></li>
-                    <li class="nav-item ms-lg-3"><a href="login.php" class="btn btn-brand btn-sm">MI CUENTA</a></li>
+                    <li class="nav-item ms-lg-3"><a href="/cuenta.php" class="btn btn-brand btn-sm">MI CUENTA</a></li>
                 </ul>
             </div>
         </div>
