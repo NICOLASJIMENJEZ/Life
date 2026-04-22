@@ -135,7 +135,7 @@
                 <ul class="navbar-nav ms-auto align-items-center">
                     <li class="nav-item"><a class="nav-link" href="#planes">PLANES</a></li>
                     <li class="nav-item"><a class="nav-link" href="#galeria">ESPACIOS</a></li>
-                    <li class="nav-item"><a class="nav-link" href="Life/cuenta.php">MI CUENTA</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/cuenta.php">MI CUENTA</a>
                     <li class="nav-item ms-lg-3">
                         <a href="registro.php" class="btn btn-brand btn-sm px-4">EMPEZAR</a>
                     </li>
