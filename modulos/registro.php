@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             (nombre, apellido, telefono, fechaNacimiento, identificacion, email, password, fecha_registro, rol_id) 
             VALUES (:nombre, :apellido, :telefono, :fechaNacimiento, :identificacion, :email, :password, :fechaRegistro, :rol_id)";
 
-        $stmt = $conn->prepare($sql);
+        $stmt = $pdo->prepare(...);
         $stmt->execute([
             ':nombre'          => $nombre,
             ':apellido'        => $apellido,
