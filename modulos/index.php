@@ -164,7 +164,7 @@ try {
                 </div>
                 <div class="col-md-4" data-aos="zoom-in" data-aos-delay="100">
                     <div class="zone-img">
-                        <img src="https://images.unsplash.com/photo-1574673139054-20b666a7b324?q=80&w=1331" alt="Funcional">
+                        <img src="imagenes/musculacion.png" alt="Funcional">
                     </div>
                     <h4 class="text-center">BOX FUNCIONAL</h4>
                 </div>
