@@ -117,7 +117,7 @@ try {
 
     <div id="gymCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <div class="carousel-inner">
-            <div class="carousel-item active" style="background-image: url('https://images.unsplash.com/photo-1540497077202-7c8a3999166f?q=80&w=1470');">
+            <div class="carousel-item active" style="background-image: url('imagenes/life.png');">
                 <div class="carousel-overlay"></div>
                 <div class="carousel-caption">
                     <h1 class="display-2 fw-bold" data-aos="fade-right">ZONA <span style="color:var(--brand)">MUSCULACIÓN</span></h1>
