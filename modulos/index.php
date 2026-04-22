@@ -170,7 +170,7 @@ try {
                 </div>
                 <div class="col-md-4" data-aos="zoom-in" data-aos-delay="200">
                     <div class="zone-img">
-                        <img src="https://images.unsplash.com/photo-1590239068531-394862444192?q=80&w=1471" alt="Duchas">
+                        <img src="imagenes/salon.png" alt="Duchas">
                     </div>
                     <h4 class="text-center">ZONA DE DUCHAS & LOCKERS</h4>
                 </div>
