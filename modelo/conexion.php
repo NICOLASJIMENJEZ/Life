@@ -1,9 +1,9 @@
 <?php
-$host = "dpg-d2410115pdvs73bvvnq0-a.oregon-postgres.render.com";
+$host = "dpg-d7k1offavr4c73esdbeg-a.oregon-postgres.render.com";
 $port = "5432";
-$dbname = "life_gym_db";
-$user = "life_gym_db_user";
-$password = "0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p";
+$dbname = "life_gym_db_hvmq";
+$user = "life_gym_db_hvmq_user";
+$password = "lEovCr88q2giz5REW4MwUPePidNosjc1";
 
 // Forzamos SSL obligatorio
 $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
