@@ -6,11 +6,11 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 // Config DB (Render PostgreSQL)
-$host     = 'dpg-d24l0l15pdvs73bvvmq0-a';
-$port     = '5432';
-$dbname   = 'life_gym_db';
-$user     = 'life_gym_db_user';
-$password = '0BaR53ptUeZaLHwtIBbMtuZ6cvYtCu3p';
+$host = "dpg-d7k1offavr4c73esdbeg-a.oregon-postgres.render.com";
+$port = "5432";
+$dbname = "life_gym_db_hvmq";
+$user = "life_gym_db_hvmq_user";
+$password = "lEovCr88q2giz5REW4MwUPePidNosjc1";
 
 try {
     $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;";
