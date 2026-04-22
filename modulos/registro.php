@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $identificacion  = intval($_POST['identificacion']);
     $email           = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
     $password        = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $rol_id          = 1; // Siempre usuario normal
+    $rol_id          = 1;
     $fechaRegistro   = date('Y-m-d');
 
     try {
@@ -21,7 +21,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             (nombre, apellido, telefono, fechaNacimiento, identificacion, email, password, fecha_registro, rol_id) 
             VALUES (:nombre, :apellido, :telefono, :fechaNacimiento, :identificacion, :email, :password, :fechaRegistro, :rol_id)";
 
-        $stmt = $pdo->prepare(...);
+        // ✅ PREPARE CORRECTO
+        $stmt = $pdo->prepare($sql);
+
+        // ✅ EXECUTE CORRECTO
         $stmt->execute([
             ':nombre'          => $nombre,
             ':apellido'        => $apellido,
@@ -33,13 +36,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             ':fechaRegistro'   => $fechaRegistro,
             ':rol_id'          => $rol_id,
         ]);
+
         $mensaje = "✅ Registro exitoso. Redirigiendo...";
         header("refresh:2;url=../login.php");
+
     } catch (PDOException $e) {
+        // Opcional: mostrar error real en desarrollo
+        // $error = $e->getMessage();
+
         $error = "❌ El correo o identificación ya están registrados.";
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -60,27 +69,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
   <div class="container">
     <h2 class="text-center mb-4">Registro en Life Gym</h2>
+
     <form action="" method="POST">
-      <div class="mb-3"><label class="form-label">Nombre</label>
-        <input type="text" class="form-control" name="nombre" required></div>
-      <div class="mb-3"><label class="form-label">Apellido</label>
-        <input type="text" class="form-control" name="apellido" required></div>
-      <div class="mb-3"><label class="form-label">Teléfono</label>
-        <input type="tel" class="form-control" name="telefono" required></div>
-      <div class="mb-3"><label class="form-label">Fecha de nacimiento</label>
-        <input type="date" class="form-control" name="fechaNacimiento" required></div>
-      <div class="mb-3"><label class="form-label">Identificación N°</label>
-        <input type="number" class="form-control" name="identificacion" required></div>
-      <div class="mb-3"><label class="form-label">Correo electrónico</label>
-        <input type="email" class="form-control" name="email" required></div>
-      <div class="mb-3"><label class="form-label">Contraseña</label>
-        <input type="password" class="form-control" name="password" required minlength="6"></div>
+      <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input type="text" class="form-control" name="nombre" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Apellido</label>
+        <input type="text" class="form-control" name="apellido" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Teléfono</label>
+        <input type="tel" class="form-control" name="telefono" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Fecha de nacimiento</label>
+        <input type="date" class="form-control" name="fechaNacimiento" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Identificación N°</label>
+        <input type="number" class="form-control" name="identificacion" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Correo electrónico</label>
+        <input type="email" class="form-control" name="email" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        <input type="password" class="form-control" name="password" required minlength="6">
+      </div>
+
       <button type="submit" class="btn-submit">Registrarse</button>
     </form>
-    <?php if ($mensaje): ?><div class="alert alert-success mt-3 text-center"><?= htmlspecialchars($mensaje) ?></div><?php endif; ?>
-    <?php if ($error): ?><div class="alert alert-danger mt-3 text-center"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-    <div class="mt-3 text-center"><a href="../login.php" style="color:#aaa;">¿Ya tienes cuenta? Inicia sesión</a></div>
+
+    <?php if ($mensaje): ?>
+      <div class="alert alert-success mt-3 text-center">
+        <?= htmlspecialchars($mensaje) ?>
+      </div>
+    <?php endif; ?>
+
+    <?php if ($error): ?>
+      <div class="alert alert-danger mt-3 text-center">
+        <?= htmlspecialchars($error) ?>
+      </div>
+    <?php endif; ?>
+
+    <div class="mt-3 text-center">
+      <a href="../login.php" style="color:#aaa;">¿Ya tienes cuenta? Inicia sesión</a>
+    </div>
   </div>
 </body>
 </html>
-
