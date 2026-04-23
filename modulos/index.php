@@ -195,12 +195,23 @@ try {
             </button>
 
             <div class="collapse navbar-collapse" id="navMain">
-                <ul class="navbar-nav mx-auto">
-                    <li class="nav-item"><a class="nav-link" href="#">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#zonas">Zonas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Planes</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-                </ul>
+              <ul class="navbar-nav mx-auto">
+    <li class="nav-item">
+        <a class="nav-link" href="index.php">Inicio</a>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link" href="modulos/zonas.html">Zonas</a>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link" href="modulos/planes.php">Planes</a>
+    </li>
+    
+    <li class="nav-item">
+        <a class="nav-link" href="#contacto">Contacto</a>
+    </li>
+</ul>
                 
                 <div class="d-flex align-items-center gap-2">
                     <?php if (isset($_SESSION['usuario_id'])): ?>
