@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZONAS ELITE | ARQUITECTURA INTERACTIVA</title>
+    
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;900&family=Inter:wght@300;600&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand: #A3E635;
+            --dark: #050505;
+        }
+        body {
+            background-color: var(--dark);
+            color: white;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
+        .outfit { font-family: 'Outfit', sans-serif; }
+        
+        /* Glassmorphism Effect */
+        .glass-card {
+            background: rgba(15, 15, 15, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(163, 230, 53, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .glass-card:hover {
+            border-color: var(--brand);
+            background: rgba(163, 230, 53, 0.05);
+            transform: translateY(-5px);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: var(--brand); }
+
+        .active-zone {
+            border-left: 4px solid var(--brand) !important;
+            background: linear-gradient(90deg, rgba(163, 230, 53, 0.1) 0%, transparent 100%);
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        // Data Source - Fácil de escalar a un Fetch de API o JSON externo
+        const ZONES_DATA = [
+            {
+                id: 1,
+                name: "CENTRO DE CARGA",
+                desc: "Equipamiento biomecánico de última generación para hipertrofia controlada.",
+                stats: { maquinas: "45+", enfoque: "Fuerza Bruta" },
+                img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1470"
+            },
+            {
+                id: 2,
+                name: "NÚCLEO CARDIO",
+                desc: "Sistemas de monitoreo metabólico en tiempo real con integración de wearables.",
+                stats: { maquinas: "30+", enfoque: "Resistencia" },
+                img: "https://images.unsplash.com/photo-1593079831268-3381b0db4a77?q=80&w=1469"
+            },
+            {
+                id: 3,
+                name: "BOX TÉCNICO",
+                desc: "Espacio de alta densidad para entrenamiento funcional y cross-training.",
+                stats: { maquinas: "Zonas Libres", enfoque: "Movilidad" },
+                img: "https://images.unsplash.com/photo-1544033527-b192daee1f5b?q=80&w=1470"
+            },
+            {
+                id: 4,
+                name: "RECOVERY LAB",
+                desc: "Protocolos de recuperación post-esfuerzo, crioterapia y liberación miofascial.",
+                stats: { servicios: "Bio-feedback", enfoque: "Biohacking" },
+                img: "https://images.unsplash.com/photo-1594882645126-14020914d58d?q=80&w=1485"
+            },
+            {
+                id: 5,
+                name: "WAR ROOM",
+                desc: "Área de artes marciales mixtas y entrenamiento de combate de alto impacto.",
+                stats: { tatami: "120m2", enfoque: "Disciplina" },
+                img: "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1470"
+            }
+        ];
+
+        const ZoneManager = () => {
+            const [selectedZone, setSelectedZone] = useState(ZONES_DATA[0]);
+            const mainImgRef = useRef(null);
+            const contentRef = useRef(null);
+
+            // Animación de transición suave con GSAP
+            useEffect(() => {
+                gsap.fromTo(mainImgRef.current, 
+                    { opacity: 0, scale: 1.1, filter: "grayscale(1)" }, 
+                    { opacity: 1, scale: 1, filter: "grayscale(0.3)", duration: 0.8, ease: "power2.out" }
+                );
+                gsap.fromTo(contentRef.current,
+                    { x: 50, opacity: 0 },
+                    { x: 0, opacity: 1, duration: 0.6, delay: 0.2 }
+                );
+            }, [selectedZone]);
+
+            return (
+                <div className="min-h-screen p-6 md:p-12 lg:p-20 flex flex-col justify-center">
+                    <header className="mb-12">
+                        <h1 className="outfit text-5xl md:text-7xl font-black mb-2 tracking-tighter">
+                            SISTEMA DE <span style={{color: 'var(--brand)'}}>ZONAS</span>
+                        </h1>
+                        <div className="h-1 w-24 bg-[#A3E635]"></div>
+                        <p className="mt-4 text-gray-400 font-light tracking-widest text-sm">LIFE GYM ELITE / ARCHITECTURE v2.0</p>
+                    </header>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                        {/* Listado de Selección */}
+                        <div className="lg:col-span-4 space-y-4 order-2 lg:order-1">
+                            {ZONES_DATA.map((zone) => (
+                                <div 
+                                    key={zone.id}
+                                    onClick={() => setSelectedZone(zone)}
+                                    className={`p-6 cursor-pointer glass-card ${selectedZone.id === zone.id ? 'active-zone' : ''}`}
+                                >
+                                    <h3 className="outfit text-lg font-bold tracking-tight">{zone.name}</h3>
+                                    <p className="text-xs text-gray-500 mt-1 uppercase font-semibold">Tecnología Aplicada</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Viewer Interactivo */}
+                        <div className="lg:col-span-8 relative overflow-hidden rounded-sm order-1 lg:order-2 group">
+                            <img 
+                                ref={mainImgRef}
+                                src={selectedZone.img} 
+                                alt={selectedZone.name}
+                                className="w-full h-[500px] object-cover"
+                            />
+                            
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90"></div>
+                            
+                            <div ref={contentRef} className="absolute bottom-0 left-0 p-8 md:p-12 w-full">
+                                <span className="inline-block bg-[#A3E635] text-black px-3 py-1 text-xs font-black outfit mb-4 uppercase">
+                                    Zona Seleccionada
+                                </span>
+                                <h2 className="outfit text-4xl md:text-6xl font-black mb-4 uppercase">{selectedZone.name}</h2>
+                                <p className="max-w-2xl text-gray-200 text-lg leading-relaxed mb-6">
+                                    {selectedZone.desc}
+                                </p>
+                                
+                                <div className="flex gap-10 border-t border-white/10 pt-6">
+                                    {Object.entries(selectedZone.stats).map(([key, val]) => (
+                                        <div key={key}>
+                                            <p className="text-[10px] text-[#A3E635] uppercase font-bold mb-1 tracking-widest">{key}</p>
+                                            <p className="text-2xl font-bold outfit">{val}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <footer className="mt-20 border-t border-white/5 pt-10 flex justify-between items-center text-[10px] text-gray-600 font-bold tracking-[0.3em] uppercase">
+                        <div>Escalabilidad: Ready</div>
+                        <div>Arquitectura: React + GSAP</div>
+                        <div>Localización: Pasto, COL</div>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ZoneManager />);
+    </script>
+</body>
+</html>
