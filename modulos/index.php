@@ -217,8 +217,8 @@ try {
                     <?php if (isset($_SESSION['usuario_id'])): ?>
                         <a href="cuenta.php" class="btn btn-outline-elite">Mi Perfil</a>
                     <?php else: ?>
-                        <a href="modulos/registro.php" class="btn btn-outline-elite">Regístrate</a>
-                        <a href="modulos/login.php" class="btn btn-elite">Iniciar Sesión</a>
+                        <a href="registro.php" class="btn btn-outline-elite">Regístrate</a>
+                        <a href="login.php" class="btn btn-elite">Iniciar Sesión</a>
                     <?php endif; ?>
                 </div>
             </div>
