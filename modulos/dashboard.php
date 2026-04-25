@@ -1,10 +1,25 @@
 <?php
+// 🔐 URL DE RENDER
 $databaseUrl = "postgresql://life_gym_db_hvmq_user:lEovCr88q2giz5REW4MwUPePidNosjc1@dpg-d7k1offavr4c73esdbeg-a.oregon-postgres.render.com/life_gym_db_hvmq";
+
+// 🔥 INICIALIZACIÓN DE VARIABLES (Para evitar errores de "Undefined variable")
+$usuarios = []; 
+$error_msg = null;
+$success_msg = null;
 
 try {
     $db = parse_url($databaseUrl);
-    $dsn = "pgsql:host={$db['host']};port=5432;dbname=".ltrim($db['path'], '/').";sslmode=require";
-    $pdo = new PDO($dsn, $db['user'], $db['pass'], [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $host = $db['host'];
+    $port = $db['port'] ?? 5432;
+    $dbname = ltrim($db['path'], '/');
+    $user = $db['user'];
+    $password = $db['pass'];
+
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
+    $pdo = new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
 
     // 1. LÓGICA DE ENVÍO DE CLASE PRIVADA
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['enviar'])) {
@@ -12,16 +27,19 @@ try {
         $titulo = $_POST['tipo_clase'];
         $rutina = $_POST['rutina_texto'];
 
+        // Asegúrate de haber creado la tabla 'clases_individuales' en tu DB
         $ins = $pdo->prepare("INSERT INTO clases_individuales (usuario_identificacion, titulo_clase, detalle_rutina) VALUES (?, ?, ?)");
         $ins->execute([$user_id, $titulo, $rutina]);
-        $success = "¡Rutina enviada con éxito!";
+        $success_msg = "✅ Rutina enviada correctamente.";
     }
 
-    // 2. OBTENER LISTA DE USUARIOS REALES DE LA DB
+    // 2. OBTENER LISTA DE USUARIOS (Ahora siempre se llenará $usuarios)
     $stmt = $pdo->query("SELECT nombre, apellido, email, identificacion FROM usuarios ORDER BY nombre ASC");
-    $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $usuarios = $stmt->fetchAll();
 
-} catch (Exception $e) { $error = $e->getMessage(); }
+} catch (Exception $e) {
+    $error_msg = "Error: " . $e->getMessage();
+}
 ?>
 
 <!DOCTYPE html>
@@ -31,36 +49,40 @@ try {
     <title>GYMCORE | Admin Master</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background: #0a0a0a; color: #fff; font-family: 'Segoe UI', sans-serif; }
+        body { background: #0a0a0a; color: #fff; font-family: sans-serif; }
         .neon-text { color: #d4ff00; }
         .card-gym { background: #111; border: 1px solid #333; border-radius: 15px; }
         .btn-neon { background: #d4ff00; color: #000; font-weight: bold; border: none; }
-        .btn-neon:hover { background: #b8e600; box-shadow: 0 0 15px rgba(212, 255, 0, 0.4); }
+        .btn-neon:hover { background: #b8e600; }
         .form-control, .form-select { background: #1a1a1a; border: 1px solid #333; color: #fff; }
-        .form-control:focus { background: #222; color: #fff; border-color: #d4ff00; box-shadow: none; }
+        .table { color: #fff; }
     </style>
 </head>
 <body>
 
 <div class="container py-5">
-    <h2 class="fw-bold mb-4">GYMCORE <span class="neon-text">ADMIN</span></h2>
+    <h2 class="fw-bold mb-4 text-uppercase">Gymcore <span class="neon-text">Admin</span></h2>
 
-    <?php if(isset($success)): ?>
-        <div class="alert alert-success bg-dark text-success border-success"><?= $success ?></div>
+    <?php if($success_msg): ?>
+        <div class="alert alert-success bg-dark text-success border-success"><?= $success_msg ?></div>
+    <?php endif; ?>
+
+    <?php if($error_msg): ?>
+        <div class="alert alert-danger bg-dark text-danger border-danger"><?= $error_msg ?></div>
     <?php endif; ?>
 
     <div class="row g-4">
         <div class="col-md-5">
             <div class="card card-gym p-4 shadow-lg">
-                <h4 class="neon-text mb-4">Publicar Clase Individual</h4>
+                <h4 class="neon-text mb-4">Enviar Clase Privada</h4>
                 <form method="POST">
                     <div class="mb-3">
-                        <label class="text-muted small">SELECCIONAR ATLETA DESTINO</label>
+                        <label class="text-muted small">SELECCIONAR ATLETA</label>
                         <select name="atleta_id" class="form-select" required>
                             <option value="">-- Elegir Usuario --</option>
                             <?php foreach($usuarios as $u): ?>
                                 <option value="<?= $u['identificacion'] ?>">
-                                    <?= htmlspecialchars($u['nombre']." ".$u['apellido']) ?> (ID: <?= $u['identificacion'] ?>)
+                                    <?= htmlspecialchars($u['nombre']." ".$u['apellido']) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -76,11 +98,11 @@ try {
                     </div>
 
                     <div class="mb-3">
-                        <label class="text-muted small">RUTINA (Series, Reps, Notas)</label>
-                        <textarea name="rutina_texto" class="form-control" rows="6" required placeholder="Escribe los ejercicios aquí..."></textarea>
+                        <label class="text-muted small">RUTINA DETALLADA</label>
+                        <textarea name="rutina_texto" class="form-control" rows="5" required></textarea>
                     </div>
 
-                    <button type="submit" name="enviar" class="btn btn-neon w-100 py-2">ENVIAR A CUENTA DE USUARIO</button>
+                    <button type="submit" name="enviar" class="btn btn-neon w-100 py-2">PUBLICAR AHORA</button>
                 </form>
             </div>
         </div>
@@ -92,19 +114,23 @@ try {
                     <table class="table table-dark table-hover">
                         <thead>
                             <tr class="text-muted small">
-                                <th>Atleta</th>
-                                <th>ID / Identificación</th>
+                                <th>Nombre</th>
+                                <th>Identificación</th>
                                 <th>Email</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($usuarios as $u): ?>
-                            <tr>
-                                <td><?= htmlspecialchars($u['nombre']." ".$u['apellido']) ?></td>
-                                <td><span class="badge bg-dark border border-secondary text-info"><?= $u['identificacion'] ?></span></td>
-                                <td class="text-muted small"><?= $u['email'] ?></td>
-                            </tr>
-                            <?php endforeach; ?>
+                            <?php if(!empty($usuarios)): ?>
+                                <?php foreach($usuarios as $u): ?>
+                                <tr>
+                                    <td><?= htmlspecialchars($u['nombre']." ".$u['apellido']) ?></td>
+                                    <td><span class="badge bg-dark border border-secondary"><?= $u['identificacion'] ?></span></td>
+                                    <td class="text-muted small"><?= $u['email'] ?></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr><td colspan="3" class="text-center">No hay usuarios disponibles.</td></tr>
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
