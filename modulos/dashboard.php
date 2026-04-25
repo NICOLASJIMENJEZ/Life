@@ -1,34 +1,27 @@
 <?php
-/**
- * LIFE GYM - DASHBOARD FINAL
- * Ajustado para corregir errores de conexión SSL y variables indefinidas.
- */
-
-// 1. CREDENCIALES (Copiadas exactamente de tu panel de Render)
+<?php
 $host     = "dpg-d7k1offavr4c73esdbeg-a.oregon-postgres.render.com"; 
 $port     = "5432";
 $dbname   = "life_gym_db_hvmq";
 $user     = "life_gym_db_hvmq_user";
 $password = "lEovCr88qgiz5REW4MwUPePidNosjc1";
 
-// Inicializamos variables con valores por defecto para evitar "Undefined variable"
-$db_users = [];
-$total_users = 0;
-$stats = [];
-$planes = [];
-
 try {
-    // DSN con sslmode=require para evitar el error de conexión externa
+    // Forzamos sslmode en el DSN
     $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
     
     $options = [
-        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_TIMEOUT            => 5 // Tiempo de espera de 5 segundos
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        // Esta opción es clave para algunos entornos de PHP antiguos o mal configurados
+        PDO::PGSQL_ATTR_DISABLE_PREPARES => true 
     ];
 
     $pdo = new PDO($dsn, $user, $password, $options);
-
+    
+    // Si llega aquí, la conexión funciona.
+} catch (PDOException $e) {
+    echo "Error persistente: " . $e->getMessage();
+}
     // EXTRACCIÓN DE DATOS
     $stmt = $pdo->query("SELECT nombre, apellido, email, identificacion, fecha_registro FROM usuarios ORDER BY id ASC");
     $db_users = $stmt->fetchAll();
