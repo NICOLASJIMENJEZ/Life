@@ -1,131 +1,112 @@
 <?php
-// 🔐 URL DE RENDER
+// Configuración de conexión (Tu lógica original)
 $databaseUrl = "postgresql://life_gym_db_hvmq_user:lEovCr88q2giz5REW4MwUPePidNosjc1@dpg-d7k1offavr4c73esdbeg-a.oregon-postgres.render.com/life_gym_db_hvmq";
-
-// 🔥 INICIALIZACIÓN SEGURA
 $db_users = [];
 $total_users = 0;
 $error_msg = null;
 
 try {
-
     $db = parse_url($databaseUrl);
-
-    if (!$db) {
-        throw new Exception("Error parseando la URL de la base de datos");
-    }
-
-    $host = $db['host'];
-    $port = $db['port'] ?? 5432;
-    $dbname = ltrim($db['path'], '/');
-    $user = $db['user'];
-    $password = $db['pass'];
-
-    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
-
-    $pdo = new PDO($dsn, $user, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    ]);
-
-    // 🔥 CONSULTA
-    $stmt = $pdo->query("
-        SELECT nombre, apellido, email, identificacion, fecha_registro 
-        FROM usuarios
-        ORDER BY id DESC
-    ");
-
-    $db_users = $stmt->fetchAll();
+    $dsn = "pgsql:host={$db['host']};port=5432;dbname=".ltrim($db['path'], '/').";sslmode=require";
+    $pdo = new PDO($dsn, $db['user'], $db['pass'], [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $stmt = $pdo->query("SELECT nombre, apellido, email, identificacion, fecha_registro FROM usuarios ORDER BY id DESC");
+    $db_users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     $total_users = count($db_users);
-
-} catch (Exception $e) {
-    $error_msg = $e->getMessage();
-}
+} catch (Exception $e) { $error_msg = $e->getMessage(); }
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>GYMCORE</title>
-
-<style>
-body{background:#0a0a0a;color:#fff;font-family:sans-serif;margin:0}
-.nav{padding:15px;background:#111}
-button{margin-right:10px;padding:8px;cursor:pointer}
-.card{background:#111;margin:20px;padding:15px;border-radius:10px}
-.class-card{display:block;background:#181818;margin:5px;padding:10px;border:none;color:#fff;width:100%;text-align:left}
-</style>
-
-<script>
-function showPanel(p){
-    document.getElementById('admin').style.display = (p==='admin')?'block':'none';
-    document.getElementById('user').style.display = (p==='user')?'block':'none';
-}
-</script>
-
+    <meta charset="UTF-8">
+    <title>GYMCORE | Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background: #0a0a0a; color: #fff; font-family: 'Segoe UI', sans-serif; }
+        .card-custom { background: #111; border: 1px solid #333; border-radius: 12px; margin-bottom: 20px; }
+        .neon-text { color: #d4ff00; }
+        .btn-neon { background: #d4ff00; color: #000; font-weight: bold; border: none; }
+        .btn-neon:hover { background: #b8e600; }
+        .table { color: #fff; border-color: #333; }
+    </style>
 </head>
-
 <body>
 
-<div class="nav">
-    <h2>GYMCORE</h2>
-    <button onclick="showPanel('admin')">Admin</button>
-    <button onclick="showPanel('user')">Usuario</button>
+<nav class="navbar navbar-dark bg-black border-bottom border-secondary mb-4">
+    <div class="container">
+        <span class="navbar-brand fw-bold neon-text">GYMCORE ADMIN</span>
+        <a href="usuario.php" target="_blank" class="btn btn-outline-light btn-sm">Abrir Vista Usuario ↗</a>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card card-custom p-4">
+                <h4 class="neon-text mb-3">Publicar Nueva Clase</h4>
+                <div class="mb-3">
+                    <label class="form-label text-muted">Tipo de Clase</label>
+                    <select id="tipoClase" class="form-select bg-dark text-white border-secondary">
+                        <option value="Tren Superior">🏋️ Tren Superior</option>
+                        <option value="Tren Inferior">🦵 Tren Inferior</option>
+                        <option value="Cardio/Box">🔥 Cardio / Box</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted">Detalle de la Rutina (Ejercicios, series, reps)</label>
+                    <textarea id="detalleClase" class="form-control bg-dark text-white border-secondary" rows="5" placeholder="Ej: Press Banca 4x12..."></textarea>
+                </div>
+                <button onclick="enviarClase()" class="btn btn-neon w-100">PUBLICAR CLASE</button>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="card card-custom p-4">
+                <h4 class="mb-3">Usuarios Registrados (<?= $total_users ?>)</h4>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Atleta</th>
+                                <th>Email</th>
+                                <th>Registro</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($db_users as $u): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($u['nombre']." ".$u['apellido']) ?></td>
+                                <td class="text-muted small"><?= htmlspecialchars($u['email']) ?></td>
+                                <td class="small"><?= date('d/m/Y', strtotime($u['fecha_registro'])) ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- ERROR -->
-<?php if(!empty($error_msg)): ?>
-<div style="background:red;padding:10px;">
-⚠️ <?= htmlspecialchars($error_msg) ?>
-</div>
-<?php endif; ?>
+<script>
+    function enviarClase() {
+        const titulo = document.getElementById('tipoClase').value;
+        const contenido = document.getElementById('detalleClase').value;
+        
+        if(!contenido) return alert("Escribe los ejercicios primero");
 
-<!-- ================= ADMIN ================= -->
-<div id="admin" class="card">
+        const claseData = {
+            titulo: titulo,
+            contenido: contenido,
+            fecha: new Date().toLocaleTimeString()
+        };
 
-<h3>Usuarios (<?= $total_users ?>)</h3>
-
-<table border="1" width="100%">
-<tr>
-<th>Nombre</th>
-<th>Email</th>
-<th>ID</th>
-<th>Registro</th>
-</tr>
-
-<?php if($total_users > 0): ?>
-    <?php foreach($db_users as $u): ?>
-    <tr>
-        <td><?= htmlspecialchars($u['nombre']." ".$u['apellido']) ?></td>
-        <td><?= htmlspecialchars($u['email']) ?></td>
-        <td><?= htmlspecialchars($u['identificacion']) ?></td>
-        <td><?= htmlspecialchars($u['fecha_registro']) ?></td>
-    </tr>
-    <?php endforeach; ?>
-<?php else: ?>
-<tr><td colspan="4">Sin usuarios registrados</td></tr>
-<?php endif; ?>
-
-</table>
-
-</div>
-
-<!-- ================= USUARIO ================= -->
-<div id="user" class="card" style="display:none;">
-
-<h3>Seleccionar Clase</h3>
-
-<form action="cuenta.php" method="POST">
-
-<button class="class-card" name="clase" value="Musculacion">🏋️ Musculación</button>
-<button class="class-card" name="clase" value="Crossfit">🤸 Crossfit</button>
-<button class="class-card" name="clase" value="Yoga">🧘 Yoga</button>
-<button class="class-card" name="clase" value="Spinning">🚴 Spinning</button>
-
-</form>
-
-</div>
+        // Guardamos en LocalStorage para que el otro archivo lo reciba
+        localStorage.setItem('ultima_clase', JSON.stringify(claseData));
+        alert("¡Clase enviada al muro de los usuarios!");
+        document.getElementById('detalleClase').value = "";
+    }
+</script>
 
 </body>
 </html>
