@@ -2,26 +2,35 @@
 // 🔐 CONEXIÓN RENDER (CORRECTA)
 $databaseUrl = "postgresql://life_gym_db_hvmq_user:lEovCr88q2giz5REW4MwUPePidNosjc1@dpg-d7k1offavr4c73esdbeg-a.oregon-postgres.render.com/life_gym_db_hvmq";
 
-$db_users = [];
-$total_users = 0;
-$error_msg = null;
-
 try {
+
     $db = parse_url($databaseUrl);
 
-    $pdo = new PDO(
-        "pgsql:host={$db['host']};port={$db['port']};dbname=" . ltrim($db['path'], '/') . ";sslmode=require",
-        $db['user'],
-        $db['pass'],
-        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-    );
+    if (!$db) {
+        throw new Exception("Error parseando DATABASE_URL");
+    }
 
-    $stmt = $pdo->query("SELECT nombre, apellido, email, identificacion, fecha_registro FROM usuarios ORDER BY id DESC");
-    $db_users = $stmt->fetchAll();
-    $total_users = count($db_users);
+    $host = $db['host'];
+    $port = isset($db['port']) ? $db['port'] : 5432; // 🔥 FIX
+    $dbname = ltrim($db['path'], '/');
+    $user = $db['user'];
+    $password = $db['pass'];
+
+    // 🔐 DSN correcto
+    $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
+
+    $pdo = new PDO($dsn, $user, $password, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    ]);
+
+    // TEST
+    $pdo->query("SELECT 1");
+
+    echo "✅ Conectado correctamente";
 
 } catch (Exception $e) {
-    $error_msg = $e->getMessage();
+    echo "❌ Error: " . $e->getMessage();
 }
 ?>
 
