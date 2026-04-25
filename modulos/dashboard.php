@@ -1,6 +1,6 @@
 <?php
 
-$host     = "dpg-d7k1offavr4c73esdbeg-a"; 
+$host     = "dpg-d7k1offavr4c73esdbeg-a.oregon-postgres.render.com"; 
 $port     = "5432";                       
 $dbname   = "life_gym_db_hvmq";           
 $user     = "life_gym_db_hvmq_user";      
