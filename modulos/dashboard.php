@@ -1,11 +1,10 @@
 <?php
 
 $host     = "dpg-d7k1offavr4c73esdbeg-a.oregon-postgres.render.com"; 
-$port     = "5432";                       
-$dbname   = "life_gym_db_hvmq";           
-$user     = "life_gym_db_hvmq_user";      
-$password = "lEovCr88qgiz5REW4MwUPePidNosjc1"; 
-
+$port     = "5432";
+$dbname   = "life_gym_db_hvmq";
+$user     = "life_gym_db_hvmq_user";
+$password = "lEovCr88qgiz5REW4MwUPePidNosjc1";
 try {
     
     $dsn = "pgsql:host=$host;port=$port;dbname=$dbname";
