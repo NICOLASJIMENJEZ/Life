@@ -1,38 +1,44 @@
 <?php
-<?php
+/**
+ * LIFE GYM - DASHBOARD CORE (Versión Final)
+ */
+
+// 1. CREDENCIALES DE RENDER
 $host     = "dpg-d7k1offavr4c73esdbeg-a.oregon-postgres.render.com"; 
 $port     = "5432";
 $dbname   = "life_gym_db_hvmq";
 $user     = "life_gym_db_hvmq_user";
 $password = "lEovCr88qgiz5REW4MwUPePidNosjc1";
 
+// Inicializamos variables para evitar errores de "Undefined variable"
+$db_users = [];
+$total_users = 0;
+$stats = [];
+$planes = [];
+
 try {
-    // Forzamos sslmode en el DSN
+    // Conexión segura con SSL requerido para Render
     $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
     
     $options = [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        // Esta opción es clave para algunos entornos de PHP antiguos o mal configurados
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::PGSQL_ATTR_DISABLE_PREPARES => true 
     ];
 
     $pdo = new PDO($dsn, $user, $password, $options);
     
-    // Si llega aquí, la conexión funciona.
-} catch (PDOException $e) {
-    echo "Error persistente: " . $e->getMessage();
-}
-    // EXTRACCIÓN DE DATOS
+    // 2. EXTRACCIÓN DE DATOS (Dentro del bloque try)
     $stmt = $pdo->query("SELECT nombre, apellido, email, identificacion, fecha_registro FROM usuarios ORDER BY id ASC");
     $db_users = $stmt->fetchAll();
     $total_users = count($db_users);
 
-    // DEFINICIÓN DE ESTADÍSTICAS (Solo si la conexión funciona)
+    // 3. DEFINICIÓN DE ESTADÍSTICAS DINÁMICAS
     $stats = [
-        ['label' => 'Usuarios totales', 'val' => $total_users, 'class' => 's1', 'sub' => 'Sincronizado'],
-        ['label' => 'Ingresos / mes', 'val' => '$80K', 'class' => 's2', 'sub' => 'Proyección'],
-        ['label' => 'Clases activas', 'val' => '4', 'class' => 's3', 'sub' => 'Hoy'],
-        ['label' => 'Mensajes hoy', 'val' => '12', 'class' => 's4', 'sub' => 'GymBot']
+        ['label' => 'Usuarios totales', 'val' => $total_users, 'class' => 's1'],
+        ['label' => 'Ingresos / mes', 'val' => '$80K', 'class' => 's2'],
+        ['label' => 'Clases activas', 'val' => '4', 'class' => 's3'],
+        ['label' => 'Mensajes hoy', 'val' => '12', 'class' => 's4'],
     ];
 
     $planes = [
@@ -42,6 +48,7 @@ try {
     ];
 
 } catch (PDOException $e) {
+    // Capturamos el error para mostrarlo en el banner sin romper la página
     $error_msg = "Error de conexión: " . $e->getMessage();
 }
 ?>
@@ -55,7 +62,7 @@ try {
     <style>
         :root{--bg:#0a0a0a;--bg2:#111111;--accent:#e8ff00;--accent2:#ff4d00;--text:#f0f0f0;--muted:#777;--border:#252525;--green:#00c47d;--blue:#4da6ff;}
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;}
+        body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
         .nav{display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;background:var(--bg2);border-bottom:1px solid var(--border);}
         .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:3px;color:var(--accent);}
         .panel{padding:22px 24px;}
@@ -64,9 +71,10 @@ try {
         .stat-val{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--accent);}
         .two-col{display:grid;grid-template-columns:1.4fr 1fr;gap:16px;}
         .card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;}
-        .card-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;}
+        .card-head{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
         .utbl{width:100%;border-collapse:collapse;}
         .utbl th, .utbl td{padding:12px 18px; text-align:left; font-size:13px;}
+        .utbl th{color:var(--muted); font-size:11px; text-transform:uppercase;}
         .error-banner{background:#ff4d4d; color:white; padding:15px; border-radius:8px; margin-bottom:20px; font-size:14px;}
         .bar-track{height:6px;background:#222;border-radius:3px;margin:8px 0;}
         .bar-fill{height:100%;border-radius:3px;}
@@ -80,7 +88,7 @@ try {
 
 <div class="panel">
     <?php if(isset($error_msg)): ?>
-        <div class="error-banner">⚠️ <strong>Error detectado:</strong> <?= htmlspecialchars($error_msg) ?></div>
+        <div class="error-banner">⚠️ <strong>Estado de Conexión:</strong> <?= htmlspecialchars($error_msg) ?></div>
     <?php endif; ?>
 
     <div class="stats-row">
@@ -95,34 +103,41 @@ try {
     <div class="two-col">
         <div class="card">
             <div class="card-head">
-                <span>Usuarios en Base de Datos</span>
-                <span style="color:var(--green)">● <?= $total_users ?> Activos</span>
+                <span style="font-weight:700;">Usuarios en Base de Datos</span>
+                <span style="color:var(--green); font-size:12px;">● <?= $total_users ?> Activos</span>
             </div>
             <table class="utbl">
                 <thead>
-                    <tr><th>Nombre</th><th>Identificación</th><th>Registro</th></tr>
+                    <tr><th>Nombre Completo</th><th>Identificación</th><th>Fecha Registro</th></tr>
                 </thead>
                 <tbody>
-                    <?php foreach($db_users as $u): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($u['nombre'] . ' ' . $u['apellido']) ?></td>
-                        <td><?= htmlspecialchars($u['identificacion']) ?></td>
-                        <td><?= htmlspecialchars($u['fecha_registro']) ?></td>
-                    </tr>
-                    <?php endforeach; ?>
+                    <?php if($total_users > 0): ?>
+                        <?php foreach($db_users as $u): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($u['nombre'] . ' ' . $u['apellido']) ?></td>
+                            <td style="color:var(--muted)"><?= htmlspecialchars($u['identificacion']) ?></td>
+                            <td style="color:var(--muted)"><?= htmlspecialchars($u['fecha_registro']) ?></td>
+                        </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr><td colspan="3" style="text-align:center; padding:30px; color:var(--muted);">Sin datos que mostrar.</td></tr>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
 
         <div class="card">
-            <div class="card-head"><span>Planes</span></div>
+            <div class="card-head"><span>Rendimiento de Planes</span></div>
             <?php foreach($planes as $p): ?>
             <div style="padding:15px; border-bottom:1px solid #222;">
                 <div style="display:flex; justify-content:space-between; font-size:13px;">
                     <span><?= $p['name'] ?></span>
                     <span style="color:var(--accent)">$<?= $p['price'] ?></span>
                 </div>
-                <div class="bar-track"><div class="bar-fill" style="width:<?= $p['fill'] ?>; background:<?= $p['color'] ?>;"></div></div>
+                <div class="bar-track">
+                    <div class="bar-fill" style="width:<?= $p['fill'] ?>; background:<?= $p['color'] ?>;"></div>
+                </div>
+                <div style="font-size:10px; color:var(--muted)"><?= $p['desc'] ?></div>
             </div>
             <?php endforeach; ?>
         </div>
